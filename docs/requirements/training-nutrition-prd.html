@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>运动训练与饮食一体化 MVP PRD</title>
+    <meta
+      name="description"
+      content="AiLifeOS 首个落地模块：运动训练与饮食一体化 MVP 产品需求文档。"
+    >
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f8;
+        --panel: #ffffff;
+        --panel-soft: #fafafa;
+        --text: #1f2328;
+        --muted: #606a75;
+        --border: #d8dee4;
+        --accent: #2563eb;
+        --accent-soft: #eff6ff;
+        --success: #15803d;
+        --warning: #b45309;
+        --danger: #b91c1c;
+        --code: #f1f5f9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Microsoft YaHei",
+          sans-serif;
+        line-height: 1.65;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      aside {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        border-right: 1px solid var(--border);
+        background: var(--panel);
+        padding: 24px 18px;
+      }
+
+      main {
+        width: 100%;
+        max-width: 1120px;
+        padding: 40px 48px 80px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.25;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 34px;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+
+      h3 {
+        font-size: 18px;
+        margin: 22px 0 10px;
+      }
+
+      p {
+        margin: 10px 0;
+      }
+
+      ul,
+      ol {
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 10px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--panel-soft);
+        font-weight: 650;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      code,
+      pre {
+        font-family:
+          "SFMono-Regular",
+          Consolas,
+          "Liberation Mono",
+          monospace;
+      }
+
+      code {
+        background: var(--code);
+        border-radius: 4px;
+        padding: 2px 5px;
+      }
+
+      pre {
+        overflow: auto;
+        margin: 14px 0;
+        padding: 14px 16px;
+        background: var(--code);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        line-height: 1.55;
+      }
+
+      .eyebrow {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 650;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .summary {
+        max-width: 820px;
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .nav-title {
+        margin-bottom: 14px;
+        font-size: 18px;
+        font-weight: 750;
+      }
+
+      .nav-note {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 18px;
+      }
+
+      nav a {
+        display: block;
+        border-radius: 6px;
+        padding: 6px 8px;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      nav a:hover {
+        background: var(--accent-soft);
+        text-decoration: none;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .meta-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 12px;
+      }
+
+      .meta-item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+
+      .meta-item span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .doc-section {
+        margin-top: 28px;
+        padding: 24px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: flex-end;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 2px 8px;
+        background: var(--panel-soft);
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .tag.active {
+        border-color: #bfdbfe;
+        background: var(--accent-soft);
+        color: #1d4ed8;
+      }
+
+      .tag.safe {
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+        color: var(--success);
+      }
+
+      .tag.warn {
+        border-color: #fed7aa;
+        background: #fff7ed;
+        color: var(--warning);
+      }
+
+      .tag.danger {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: var(--danger);
+      }
+
+      .callout {
+        margin: 14px 0;
+        padding: 12px 14px;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        background: var(--accent-soft);
+      }
+
+      .callout strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .mini-card {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        background: var(--panel-soft);
+      }
+
+      .mini-card strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      footer {
+        margin-top: 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 920px) {
+        .layout {
+          display: block;
+        }
+
+        aside {
+          position: static;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        main {
+          padding: 28px 18px 56px;
+        }
+
+        .meta-grid,
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          display: block;
+        }
+
+        .tags {
+          justify-content: flex-start;
+          margin-top: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside aria-label="文档目录">
+        <div class="nav-title">训练饮食 PRD</div>
+        <div class="nav-note">AiLifeOS 首个落地模块的产品需求基线。</div>
+        <nav>
+          <a href="#background">1. 背景与定位</a>
+          <a href="#problems">2. 用户问题</a>
+          <a href="#goals">3. MVP 目标</a>
+          <a href="#scope">4. 范围边界</a>
+          <a href="#personas">5. 用户与场景</a>
+          <a href="#flows">6. 核心流程</a>
+          <a href="#features">7. 功能需求</a>
+          <a href="#pages">8. 页面需求</a>
+          <a href="#data">9. 数据对象</a>
+          <a href="#rules">10. 规则体系</a>
+          <a href="#image2">11. image2 需求</a>
+          <a href="#checkins">12. 打卡机制</a>
+          <a href="#acceptance">13. 验收标准</a>
+          <a href="#metrics">14. 成功指标</a>
+          <a href="#open-questions">15. 未决问题</a>
+          <a href="#implementation-notes">16. 实施备注</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header>
+          <div class="eyebrow">Product Requirements Document</div>
+          <h1>运动训练与饮食一体化 MVP PRD</h1>
+          <p class="summary">
+            本文档将 AiLifeOS 的首个真实场景转成可落地的产品需求。它面向 MVP，不覆盖完整 LifeOS，重点定义训练、饮食、记录、复盘、image2 动作图生成和安全规则。
+          </p>
+
+          <div class="meta-grid" aria-label="文档元信息">
+            <div class="meta-item">
+              <strong>所属项目</strong>
+              <span>AiLifeOS</span>
+            </div>
+            <div class="meta-item">
+              <strong>模块</strong>
+              <span>运动训练与饮食一体化</span>
+            </div>
+            <div class="meta-item">
+              <strong>文档状态</strong>
+              <span>MVP 需求基线</span>
+            </div>
+            <div class="meta-item">
+              <strong>来源</strong>
+              <span>产品经理 Agent 草案整合</span>
+            </div>
+          </div>
+        </header>
+
+        <section id="background" class="doc-section" data-status="active" data-module="product">
+          <div class="section-head">
+            <h2>1. 背景与定位</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">MVP</span></div>
+          </div>
+          <p>本模块是 AiLifeOS 的第一个落地场景，不是完整 LifeOS，也不是独立健身 App。</p>
+          <p>MVP 要服务一个明确场景：用户刚开通半年健身卡，是健身小白，平时打羽毛球和网球，希望通过健身房训练、饮食安排、动作教学和复盘，提升运动表现并建立训练习惯。</p>
+          <div class="callout">
+            <strong>产品定位</strong>
+            面向健身小白、服务羽毛球和网球提升的训练与饮食一体化助手。
+          </div>
+        </section>
+
+        <section id="problems" class="doc-section" data-status="active" data-module="problem">
+          <div class="section-head">
+            <h2>2. 用户问题</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">problem</span></div>
+          </div>
+          <ul>
+            <li>不知道今天该不该练、练什么、怎么练。</li>
+            <li>不认识健身房器械，不清楚动作标准和安全边界。</li>
+            <li>训练计划容易被固定球局、临时网球课、疲劳、疼痛和临时事情打乱。</li>
+            <li>有训练计划后，不知道当天应该怎么吃来配合训练。</li>
+            <li>记录成本过高时容易中断，缺少低摩擦打卡机制。</li>
+            <li>训练后缺少复盘，无法判断下次加量、保持、降级还是恢复。</li>
+            <li>AI 生成动作图可能不准确，需要可审核、可复用、可重生成。</li>
+          </ul>
+        </section>
+
+        <section id="goals" class="doc-section" data-status="active" data-module="goal">
+          <div class="section-head">
+            <h2>3. MVP 目标</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">goal</span></div>
+          </div>
+          <ul>
+            <li>生成灵活的“今日训练 + 今日饮食”一体化计划。</li>
+            <li>支持固定球局、临时网球课、跳过训练、缩短训练后的重新规划。</li>
+            <li>每次训练后提供低门槛拉伸和放松安排，帮助恢复并降低不适风险。</li>
+            <li>为每个动作提供小白可理解的图文教学。</li>
+            <li>按需调用 image2 生成动作图，并保存为本地静态资源。</li>
+            <li>设计低摩擦打卡机制，让状态、训练、饮食、疼痛和计划变化能持续沉淀。</li>
+            <li>记录训练、饮食、疲劳、疼痛、球类活动。</li>
+            <li>基于记录生成周复盘和下周调整建议。</li>
+          </ul>
+        </section>
+
+        <section id="scope" class="doc-section" data-status="active" data-module="scope">
+          <div class="section-head">
+            <h2>4. 范围边界</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag warn">YAGNI</span></div>
+          </div>
+          <div class="grid-2">
+            <div class="mini-card">
+              <strong>MVP 包含</strong>
+              <ul>
+                <li>个人档案、半年目标、固定日程、今日状态打卡。</li>
+                <li>本周训练任务池，不写死固定课表。</li>
+                <li>今日训练计划、训练后拉伸、今日饮食计划、动作详情、训练记录、饮食记录。</li>
+                <li>今日状态、训练完成、拉伸完成、饮食执行、疼痛、球类活动和计划变化打卡。</li>
+                <li>image2 prompt 生成、图片资产状态管理。</li>
+                <li>周复盘、训练安全规则、饮食联动规则。</li>
+              </ul>
+            </div>
+            <div class="mini-card">
+              <strong>MVP 不包含</strong>
+              <ul>
+                <li>用户系统、云数据库、社区、排行榜、支付。</li>
+                <li>多人训练计划、完整 LifeOS 其他模块。</li>
+                <li>精确热量计算、食物数据库、拍照识别饮食。</li>
+                <li>可穿戴设备接入。</li>
+                <li>前端直接调用 image2。</li>
+                <li>自动提交 GitHub。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="personas" class="doc-section" data-status="active" data-module="persona">
+          <div class="section-head">
+            <h2>5. 用户与场景</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">persona</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>场景</th><th>用户意图</th><th>系统响应</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>每天打开系统</td>
+                <td>快速知道今天练什么、怎么吃、有没有风险。</td>
+                <td>显示今日训练、饮食、推荐理由、状态风险和快捷调整。</td>
+              </tr>
+              <tr>
+                <td>早上或训练前打卡</td>
+                <td>用很低成本告诉系统今天身体状态和可用时间。</td>
+                <td>收集睡眠、疲劳、酸痛、疼痛、可训练时间和当日球类安排，用于生成或调整今日计划。</td>
+              </tr>
+              <tr>
+                <td>每周三固定打球</td>
+                <td>不要让健身计划和球局冲突。</td>
+                <td>固定事件优先，避开重腿或高冲突训练。</td>
+              </tr>
+              <tr>
+                <td>临时约了网球课</td>
+                <td>希望训练和饮食都随之调整。</td>
+                <td>降低肩部高负荷训练，增加训练前碳水和补水提醒。</td>
+              </tr>
+              <tr>
+                <td>今天不想练或没时间</td>
+                <td>不想计划崩掉。</td>
+                <td>提供跳过、改期、最低可行版本，并同步调整饮食。</td>
+              </tr>
+              <tr>
+                <td>不懂动作</td>
+                <td>需要看图和简单说明才能安全完成。</td>
+                <td>展示动作图、步骤、常见错误、停止信号和替代动作。</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="flows" class="doc-section" data-status="active" data-module="flow">
+          <div class="section-head">
+            <h2>6. 核心流程</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">flow</span></div>
+          </div>
+          <h3>主流程</h3>
+          <pre><code>首次建档
+  -> 设置半年目标、固定球局、训练偏好、伤病限制
+  -> 生成本周训练任务池
+  -> 每日状态打卡
+  -> 结合日程、疲劳、疼痛、球类活动生成今日训练和饮食
+  -> 用户查看动作详情
+  -> 无动作图时生成 prompt 并调用 image2
+  -> 保存图片资产并展示
+  -> 用户完成训练和饮食记录
+  -> 用户完成训练后打卡和饮食执行打卡
+  -> 系统复盘并调整后续计划</code></pre>
+
+          <h3>计划变化流程</h3>
+          <pre><code>用户触发变化
+  -> 选择原因：不练 / 改天 / 只有 20 分钟 / 晚上打球 / 身体不舒服
+  -> 系统重新评估训练任务池、日程、状态和风险
+  -> 生成新的训练建议
+  -> 同步生成新的饮食建议
+  -> 将变化写入打卡记录，用于周复盘</code></pre>
+
+          <h3>打卡流程</h3>
+          <pre><code>打开今日页
+  -> 状态打卡：睡眠 / 疲劳 / 酸痛 / 疼痛 / 可用时间 / 今日球类
+  -> 系统生成或调整今日计划
+  -> 执行训练和饮食
+  -> 完成打卡：训练完成度 / RPE / 疼痛 / 饮食执行 / 备注
+  -> 数据进入记录和周复盘</code></pre>
+
+          <h3>动作图生成流程</h3>
+          <pre><code>用户打开动作详情
+  -> 查询 Asset manifest
+  -> 有 ready 图片：直接展示
+  -> 无图片或状态为 regenerate：生成 prompt
+  -> 本地服务调用 image2
+  -> 保存到 public/exercise-images/
+  -> 更新 Asset 状态
+  -> 用户可标记 rejected 或重新生成</code></pre>
+        </section>
+
+        <section id="features" class="doc-section" data-status="active" data-module="feature">
+          <div class="section-head">
+            <h2>7. 功能需求</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">feature</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>功能域</th><th>需求</th><th>优先级</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>建档</td><td>录入身体信息、健身经验、伤病、偏好、可训练时间、固定球局。</td><td>P0</td></tr>
+              <tr><td>目标</td><td>建立半年运动提升目标，并拆成适应期、基础期、专项期、巩固期。</td><td>P0</td></tr>
+              <tr><td>周任务池</td><td>生成本周要完成的训练任务，不固定到死课表。</td><td>P0</td></tr>
+              <tr><td>今日计划</td><td>根据日程、状态和任务池生成今日训练、训练后拉伸与饮食。</td><td>P0</td></tr>
+              <tr><td>计划调整</td><td>支持跳过、改期、换一个、只有 20 分钟、晚上打球、身体不舒服。</td><td>P0</td></tr>
+              <tr><td>打卡机制</td><td>支持状态打卡、训练完成打卡、饮食执行打卡、疼痛打卡、计划变化打卡。</td><td>P0</td></tr>
+              <tr><td>动作教学</td><td>动作详情展示步骤、图文、常见错误、停止信号、替代动作。</td><td>P0</td></tr>
+              <tr><td>训练后拉伸</td><td>根据今日训练和球类活动生成 5-10 分钟拉伸与放松任务。</td><td>P0</td></tr>
+              <tr><td>image2 资源</td><td>按需生成动作图片，保存静态资源，维护状态和 prompt。</td><td>P1</td></tr>
+              <tr><td>训练记录</td><td>记录重量、次数、RPE、疼痛、备注和完成情况。</td><td>P0</td></tr>
+              <tr><td>饮食记录</td><td>按餐次轻量记录蛋白质、碳水、蔬菜、饮水和训练补给。</td><td>P1</td></tr>
+              <tr><td>周复盘</td><td>输出完成率、疲劳/疼痛风险、下周调整建议。</td><td>P1</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="pages" class="doc-section" data-status="active" data-module="page">
+          <div class="section-head">
+            <h2>8. 页面需求</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">UI</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>页面</th><th>MVP 要解决的问题</th><th>关键内容</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>今日页</td><td>今天练什么、怎么吃、有什么风险、计划变了怎么办。</td><td>今日状态打卡、训练卡、饮食卡、风险提示、快捷操作、推荐理由。</td></tr>
+              <tr><td>个人档案页</td><td>建立系统决策所需的基础上下文。</td><td>身体信息、经验、伤病、目标、偏好、每周可训练时间。</td></tr>
+              <tr><td>日程页</td><td>管理固定球局、临时课程、训练安排和冲突。</td><td>周视图、事件类型、强度、固定/临时、冲突提醒。</td></tr>
+              <tr><td>训练页</td><td>展示本周任务池、今日训练、可替换/降级方案。</td><td>任务池、剩余次数、训练版本、替换建议。</td></tr>
+              <tr><td>动作详情页</td><td>让小白安全理解动作。</td><td>图文步骤、器械说明、错误示范、停止信号、替代动作。</td></tr>
+              <tr><td>饮食页</td><td>展示与今日训练联动的餐次安排和饮食记录。</td><td>早餐、午餐、训练前后、晚餐、饮水、避免事项。</td></tr>
+              <tr><td>记录页</td><td>时间线查看训练、饮食、疲劳、疼痛、球类和打卡记录。</td><td>筛选、详情、备注、疼痛标签、打卡类型。</td></tr>
+              <tr><td>统计/复盘页</td><td>判断是否坚持、是否过载、下一步怎么调。</td><td>完成率、负荷、疲劳趋势、疼痛次数、周建议。</td></tr>
+              <tr><td>资源页</td><td>管理 image2 图片、prompt、状态、重生成。</td><td>图片网格、状态、prompt、版本、重新生成。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="data" class="doc-section" data-status="active" data-module="data">
+          <div class="section-head">
+            <h2>9. 数据对象</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">data</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>对象</th><th>核心字段</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Profile</td><td>身高体重、训练经验、伤病、偏好、每周可训练时间</td><td>所有训练和饮食建议的基础上下文。</td></tr>
+              <tr><td>Goal</td><td>半年目标、阶段、衡量指标、开始/结束日期</td><td>定义训练周期和阶段目标。</td></tr>
+              <tr><td>ScheduleEvent</td><td>类型、时间、强度、是否固定、影响规则</td><td>固定球局、临时网球课、恢复日等。</td></tr>
+              <tr><td>WeeklyTaskPool</td><td>本周任务、优先级、状态、剩余次数</td><td>避免死课表，支持动态重排。</td></tr>
+              <tr><td>DailyPlan</td><td>日期、训练计划、饮食计划、推荐理由、风险</td><td>今日页的核心展示对象。</td></tr>
+              <tr><td>Exercise</td><td>动作名、器械、步骤、目标肌群、错误、停止信号、替代动作</td><td>动作教学和 prompt 生成的结构化来源。</td></tr>
+              <tr><td>NutritionPlan</td><td>早餐、午餐、训练前、训练后、晚餐、饮水、避免事项</td><td>与今日训练联动的饮食安排。</td></tr>
+              <tr><td>CheckIn</td><td>类型、日期、睡眠、疲劳、酸痛、疼痛、完成度、原因、备注</td><td>低摩擦输入，用于今日计划、记录和复盘。</td></tr>
+              <tr><td>Log</td><td>类型、时间、完成情况、疲劳、疼痛、备注</td><td>训练、饮食、状态、球类活动统一记录。</td></tr>
+              <tr><td>Asset</td><td>exerciseId、stage、file、prompt、status、version</td><td>动作图资产、prompt 和生成状态。</td></tr>
+              <tr><td>Review</td><td>周完成率、问题、风险、下周调整建议</td><td>复盘输出和后续计划调整依据。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="rules" class="doc-section" data-status="active" data-module="rules">
+          <div class="section-head">
+            <h2>10. 规则体系</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag safe">safety</span></div>
+          </div>
+          <h3>计划规则</h3>
+          <ul>
+            <li>周计划是任务池，每日动态选择，不写死课表。</li>
+            <li>固定/临时日程优先于训练计划。</li>
+            <li>用户选择“不练”“改天”“只有 20 分钟”时，训练和饮食同步重排。</li>
+            <li>每个训练提供完整版、标准版、最低可行版。</li>
+          </ul>
+
+          <h3>训练安全规则</h3>
+          <ul>
+            <li>关节刺痛、麻木、尖锐疼痛时停止动作。</li>
+            <li>当天高强度羽毛球，不安排重腿。</li>
+            <li>当天网球课，不安排肩部高负荷训练。</li>
+            <li>连续高疲劳时降级或恢复。</li>
+            <li>动作变形时不加重量。</li>
+            <li>AI 只能解释规则，不能绕过规则。</li>
+          </ul>
+
+          <h3>饮食联动规则</h3>
+          <ul>
+            <li>今日饮食由训练类型、强度、时间决定。</li>
+            <li>训练日包含训练前/训练后补给建议。</li>
+            <li>休息或跳过训练时取消训练补给，保持蛋白质和正常饮食。</li>
+            <li>球类日强调碳水、水分、电解质。</li>
+            <li>MVP 不做疾病饮食和精确营养处方。</li>
+          </ul>
+
+          <h3>打卡规则</h3>
+          <ul>
+            <li>打卡优先低摩擦，不要求用户输入长文本。</li>
+            <li>状态打卡影响今日计划生成，完成打卡影响周复盘和后续任务池。</li>
+            <li>连续漏打卡不惩罚用户，只在复盘中提示数据不足。</li>
+            <li>跳过训练也算一种有效打卡，需要记录原因。</li>
+            <li>疼痛打卡优先级高于完成率，出现关节痛时触发安全规则。</li>
+            <li>打卡不做社交排名，不做连续天数焦虑设计。</li>
+            <li>有效打卡可以向跨模块激励系统产出 RewardEvent，但训练安全规则优先于发卡规则。</li>
+          </ul>
+        </section>
+
+        <section id="image2" class="doc-section" data-status="active" data-module="asset">
+          <div class="section-head">
+            <h2>11. image2 需求</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag danger">secret safe</span></div>
+          </div>
+          <ul>
+            <li>前端不直接调用 image2。</li>
+            <li>key 只放 <code>.env.local</code> 或本地服务，不能提交。</li>
+            <li>动作图由结构化动作数据生成 prompt。</li>
+            <li>图片状态支持 <code>missing</code>、<code>generating</code>、<code>ready</code>、<code>rejected</code>、<code>regenerate</code>。</li>
+            <li>AI 图不是动作标准的唯一依据，用户可标记不准确并重生成。</li>
+            <li>生成图片保存到 <code>public/exercise-images/</code>，后续同动作复用。</li>
+          </ul>
+        </section>
+
+        <section id="checkins" class="doc-section" data-status="active" data-module="checkin">
+          <div class="section-head">
+            <h2>12. 打卡机制</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">check-in</span></div>
+          </div>
+          <p>打卡机制是记录系统的低摩擦入口，不是为了制造连续天数压力。它的核心价值是让系统获得足够上下文，支持今日计划、计划重排、训练饮食联动和周复盘。</p>
+
+          <table>
+            <thead>
+              <tr><th>打卡类型</th><th>触发时机</th><th>核心字段</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>今日状态打卡</td>
+                <td>打开今日页、训练前</td>
+                <td>睡眠、疲劳、酸痛、疼痛、可用时间、今日是否打球</td>
+                <td>决定今日训练强度、是否降级、饮食是否调整。</td>
+              </tr>
+              <tr>
+                <td>训练完成打卡</td>
+                <td>训练后</td>
+                <td>完成度、RPE、重量/次数摘要、疼痛、备注</td>
+                <td>判断下次加量、保持、降级或替换动作。</td>
+              </tr>
+              <tr>
+                <td>饮食执行打卡</td>
+                <td>餐后、睡前或训练后</td>
+                <td>蛋白质、碳水、蔬菜、饮水、训练前后补给</td>
+                <td>判断恢复风险和饮食是否支持训练。</td>
+              </tr>
+              <tr>
+                <td>球类活动打卡</td>
+                <td>羽毛球/网球后</td>
+                <td>项目、时长、强度、表现感受、疼痛</td>
+                <td>影响后续训练负荷和恢复安排。</td>
+              </tr>
+              <tr>
+                <td>计划变化打卡</td>
+                <td>跳过、改期、缩短、替换时</td>
+                <td>变化类型、原因、是否改期、备注</td>
+                <td>让周复盘知道计划为什么变化，避免误判为单纯未完成。</td>
+              </tr>
+              <tr>
+                <td>疼痛打卡</td>
+                <td>出现不适时随时记录</td>
+                <td>部位、程度、疼痛类型、触发动作、是否停止</td>
+                <td>触发安全规则，调整动作和训练安排。</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>交互原则</h3>
+          <ul>
+            <li>状态打卡控制在 30 秒内完成。</li>
+            <li>训练完成打卡优先使用滑块、选择项、快捷按钮，备注可选。</li>
+            <li>允许补打卡，但要保留实际发生日期。</li>
+            <li>允许“跳过并说明原因”，跳过不是失败，而是计划重排输入。</li>
+            <li>首页展示打卡状态，但不做强刺激连续打卡排名。</li>
+          </ul>
+        </section>
+
+        <section id="acceptance" class="doc-section" data-status="active" data-module="acceptance">
+          <div class="section-head">
+            <h2>13. 验收标准</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">acceptance</span></div>
+          </div>
+          <ol>
+            <li>用户完成建档后，系统能生成本周任务池和今日计划。</li>
+            <li>今日计划同时包含训练、训练后拉伸和饮食，并给出推荐理由。</li>
+            <li>用户能在今日页完成状态打卡，打卡结果能影响今日计划。</li>
+            <li>添加“今晚网球课”后，系统能调整训练和饮食。</li>
+            <li>点击“今天不练”后，任务回到任务池，饮食同步改为普通日。</li>
+            <li>跳过、改期、缩短训练时，系统能记录计划变化打卡和原因。</li>
+            <li>动作详情能展示步骤、风险、停止信号、替代动作。</li>
+            <li>没有动作图时能生成 prompt，并进入图片生成/缓存流程。</li>
+            <li>训练后能记录重量、次数、RPE、疼痛、拉伸完成情况和备注。</li>
+            <li>饮食能按餐次做轻量记录，不要求称重。</li>
+            <li>球类活动和疼痛能作为独立打卡进入记录系统。</li>
+            <li>周复盘能输出完成率、疲劳/疼痛风险和下周建议。</li>
+            <li>所有训练与饮食建议都显示安全提示：不替代医生、营养师或专业教练意见。</li>
+          </ol>
+        </section>
+
+        <section id="metrics" class="doc-section" data-status="draft" data-module="metrics">
+          <div class="section-head">
+            <h2>14. 成功指标</h2>
+            <div class="tags"><span class="tag warn">draft</span><span class="tag">metrics</span></div>
+          </div>
+          <ul>
+            <li>用户每周能完成至少一次训练记录和三次状态打卡。</li>
+            <li>今日计划能在 1 分钟内让用户理解“练什么、怎么吃、为什么”。</li>
+            <li>遇到计划变化时，用户能在不手动重排整周计划的情况下得到新建议。</li>
+            <li>动作详情能让用户明确知道动作步骤、错误和停止信号。</li>
+            <li>周复盘能输出至少 1 条可执行的下周调整建议。</li>
+            <li>打卡流程不阻碍使用，状态打卡应能在 30 秒内完成。</li>
+          </ul>
+        </section>
+
+        <section id="open-questions" class="doc-section" data-status="draft" data-module="questions">
+          <div class="section-head">
+            <h2>15. 未决问题</h2>
+            <div class="tags"><span class="tag warn">draft</span><span class="tag">questions</span></div>
+          </div>
+          <ul>
+            <li>训练动作库第一批应该包含多少动作，是否先控制在 20-30 个。</li>
+            <li>image2 中转站的实际接口路径、返回格式和尺寸参数需要验证。</li>
+            <li>第一版数据存储使用 localStorage、IndexedDB 还是项目内静态 JSON，需要开发前定稿。</li>
+            <li>周复盘是规则生成、AI 生成，还是规则 + AI 混合生成。</li>
+            <li>是否需要把 PRD 进一步拆成页面规格文档和数据模型文档。</li>
+            <li>打卡是否需要单独页面，还是完全融入今日页、记录页和训练完成页。</li>
+            <li>是否需要为打卡设计温和提醒，提醒频率和关闭机制如何设定。</li>
+          </ul>
+        </section>
+
+        <section id="implementation-notes" class="doc-section" data-status="active" data-module="engineering">
+          <div class="section-head">
+            <h2>16. 实施备注</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">engineering</span></div>
+          </div>
+          <ul>
+            <li>开发前必须先读 <a href="../product-memory.html">docs/product-memory.html</a>。</li>
+            <li>本 PRD 是训练与饮食模块的产品需求基线，开发时不能把模块做成独立健身 App。</li>
+            <li>涉及训练、饮食、健康建议时，必须保留安全提示和保守策略。</li>
+            <li>涉及 image2 时，必须遵守密钥不进前端、不进 GitHub 的规则。</li>
+            <li>涉及愿望清单、集卡、盲盒和奖励兑换时，必须阅读 <a href="reward-wishlist-system-prd.html">docs/requirements/reward-wishlist-system-prd.html</a>。</li>
+            <li>新增功能如果不能进入目标、计划、执行、记录、复盘、调整闭环，默认不做。</li>
+          </ul>
+        </section>
+
+        <footer>
+          <p>维护规则：当训练与饮食模块的范围、流程、数据对象、规则或验收标准变化时，必须同步更新本文档。</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AiLifeOS V1 MVP 总控交付文档</title>
+    <meta
+      name="description"
+      content="AiLifeOS V1 MVP 从用户场景到需求、功能点、技术方案和工程任务的总控交付文档。"
+    >
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f8;
+        --panel: #ffffff;
+        --panel-soft: #eef2f4;
+        --ink: #172026;
+        --muted: #63717a;
+        --line: #d9e0e4;
+        --accent: #2f6f73;
+        --accent-soft: #dfeeee;
+        --warn: #8b5e1f;
+        --warn-soft: #f6ead8;
+        --danger: #8c3a3a;
+        --danger-soft: #f5dddd;
+        --ok: #2f6f4e;
+        --ok-soft: #e0efe7;
+        --shadow: 0 18px 60px rgb(23 32 38 / 0.08);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.65;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 292px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      aside {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 28px 20px;
+        border-right: 1px solid var(--line);
+        background: rgb(255 255 255 / 0.78);
+        backdrop-filter: blur(18px);
+        overflow-y: auto;
+      }
+
+      main {
+        width: min(1080px, calc(100vw - 292px));
+        padding: 48px 36px 72px;
+      }
+
+      header,
+      .doc-section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      header {
+        padding: 34px;
+        margin-bottom: 20px;
+      }
+
+      .doc-section {
+        padding: 28px;
+        margin: 20px 0;
+      }
+
+      .nav-title {
+        font-weight: 800;
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+
+      .nav-note {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 18px;
+      }
+
+      nav {
+        display: grid;
+        gap: 7px;
+      }
+
+      nav a {
+        display: block;
+        padding: 7px 9px;
+        border-radius: 6px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      nav a:hover {
+        background: var(--panel-soft);
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        margin: 8px 0 14px;
+        font-size: clamp(34px, 5vw, 58px);
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 25px;
+      }
+
+      h3 {
+        margin: 22px 0 10px;
+        font-size: 18px;
+      }
+
+      p {
+        margin: 12px 0;
+      }
+
+      ul,
+      ol {
+        margin: 12px 0 0;
+        padding-left: 22px;
+      }
+
+      li + li {
+        margin-top: 6px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 14px;
+        font-size: 14px;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        border: 1px solid var(--line);
+        vertical-align: top;
+        text-align: left;
+      }
+
+      th {
+        background: var(--panel-soft);
+        font-weight: 700;
+      }
+
+      code,
+      pre {
+        font-family:
+          "SFMono-Regular", Consolas, "Liberation Mono", ui-monospace,
+          monospace;
+      }
+
+      pre {
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #122025;
+        color: #e8f2f1;
+        overflow-x: auto;
+        line-height: 1.55;
+      }
+
+      .eyebrow {
+        color: var(--accent);
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+      }
+
+      .summary {
+        max-width: 840px;
+        color: var(--muted);
+        font-size: 17px;
+      }
+
+      .meta-grid,
+      .grid-2,
+      .grid-3 {
+        display: grid;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .meta-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .meta-item,
+      .mini-card,
+      .callout {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel-soft);
+        padding: 14px;
+      }
+
+      .meta-item strong,
+      .mini-card strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .meta-item span,
+      .mini-card p {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .tag.warn {
+        background: var(--warn-soft);
+        color: var(--warn);
+      }
+
+      .tag.danger {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .tag.ok {
+        background: var(--ok-soft);
+        color: var(--ok);
+      }
+
+      .callout {
+        margin-top: 16px;
+        background: var(--accent-soft);
+      }
+
+      footer {
+        color: var(--muted);
+        font-size: 13px;
+        padding: 18px 4px 0;
+      }
+
+      @media (max-width: 920px) {
+        .layout {
+          display: block;
+        }
+
+        aside {
+          position: static;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        main {
+          width: 100%;
+          padding: 24px 16px 48px;
+        }
+
+        .meta-grid,
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .tags {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside aria-label="文档目录">
+        <div class="nav-title">V1 MVP 总控</div>
+        <div class="nav-note">从用户场景到需求、功能点、技术方案和工程任务的交付基线。</div>
+        <nav>
+          <a href="#purpose">1. 文档定位</a>
+          <a href="#agent-flow">2. Agent 流程</a>
+          <a href="#positioning">3. V1 定位</a>
+          <a href="#scope">4. 范围边界</a>
+          <a href="#user-stories">5. 用户故事</a>
+          <a href="#features">6. 功能模块</a>
+          <a href="#flows">7. 核心流程</a>
+          <a href="#architecture">8. 技术方案</a>
+          <a href="#boundaries">9. 模块边界</a>
+          <a href="#data">10. 数据对象</a>
+          <a href="#interfaces">11. 服务接口</a>
+          <a href="#image2">12. image2 安全链路</a>
+          <a href="#finance">13. 财务与账单边界</a>
+          <a href="#milestones">14. 工程里程碑</a>
+          <a href="#pages">15. 页面范围</a>
+          <a href="#acceptance">16. V1 完成标准</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header>
+          <div class="eyebrow">Agent Handoff Document</div>
+          <h1>AiLifeOS V1 MVP 总控交付文档</h1>
+          <p class="summary">
+            本文档整合产品经理 Agent、技术架构 Agent 和工程负责人 Agent 的输出，把 AiLifeOS 第一个版本从想法转换为需求、功能点、技术方案和程序员可执行任务。后续进入编码前，应先阅读本文档，再阅读对应模块 PRD。
+          </p>
+
+          <div class="meta-grid" aria-label="文档元信息">
+            <div class="meta-item">
+              <strong>所属项目</strong>
+              <span>AiLifeOS</span>
+            </div>
+            <div class="meta-item">
+              <strong>版本范围</strong>
+              <span>V1 MVP</span>
+            </div>
+            <div class="meta-item">
+              <strong>交付类型</strong>
+              <span>需求到工程总控</span>
+            </div>
+            <div class="meta-item">
+              <strong>关键边界</strong>
+              <span>本地优先、个人使用、不接外部支付账单</span>
+            </div>
+          </div>
+        </header>
+
+        <section id="purpose" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>1. 文档定位</h2>
+            <div class="tags"><span class="tag ok">baseline</span><span class="tag">handoff</span></div>
+          </div>
+          <p>本文档是 AiLifeOS V1 MVP 的总控交付基线，作用是把连续讨论中的产品想法落成可执行范围。</p>
+          <ul>
+            <li>产品层：明确 V1 做什么、不做什么、为什么做。</li>
+            <li>需求层：把场景转成用户故事、功能点和验收标准。</li>
+            <li>技术层：确定本地优先架构、模块边界、数据对象和服务接口。</li>
+            <li>工程层：把功能拆成程序员可执行里程碑和任务。</li>
+          </ul>
+          <div class="callout">
+            <strong>执行规则</strong>
+            后续开发不能直接从聊天记忆开写代码，必须先对照本文档确认当前任务属于哪个模块、哪个优先级、哪个里程碑。
+          </div>
+        </section>
+
+        <section id="agent-flow" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>2. Agent 流程</h2>
+            <div class="tags"><span class="tag">product</span><span class="tag">architecture</span><span class="tag">engineering</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Agent</th><th>职责</th><th>本次输出</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>产品经理 Agent</td>
+                <td>从用户场景提炼产品范围、用户故事、功能优先级和成功标准。</td>
+                <td>V1 定位、范围边界、用户故事、功能模块 P0/P1、关键业务流程。</td>
+              </tr>
+              <tr>
+                <td>技术架构 Agent</td>
+                <td>把需求转成技术结构、模块边界、本地持久化和接口方案。</td>
+                <td>React + TypeScript + Vite、IndexedDB/Dexie、本地 image2 代理、core/modules 分层。</td>
+              </tr>
+              <tr>
+                <td>工程负责人 Agent</td>
+                <td>把功能拆成程序员可以领取和验收的开发任务。</td>
+                <td>里程碑 0 到 8、任务输入/输出/模块/验收标准、推荐开发顺序。</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="positioning" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>3. V1 定位</h2>
+            <div class="tags"><span class="tag ok">V1</span><span class="tag">MVP</span></div>
+          </div>
+          <p>AiLifeOS V1 的目标不是做完整生活管理平台，而是先落地一个可闭环的个人生活操作系统最小版本。</p>
+          <pre><code>围绕训练进步、饮食配合、灵活执行、持续打卡、愿望激励、预算约束，形成第一个可用闭环。</code></pre>
+          <p>V1 重点解决以下问题：</p>
+          <ul>
+            <li>用户是健身小白，不知道今天该练什么、怎么练。</li>
+            <li>用户有羽毛球、网球活动，训练计划不能和真实日程冲突。</li>
+            <li>训练计划和饮食安排必须同步生成，而不是两个孤立模块。</li>
+            <li>动作教学需要图文并茂，动作图通过 image2 按需生成并复用。</li>
+            <li>打卡不是压力签到，而是让系统理解完成、跳过、调整、疼痛和疲劳。</li>
+            <li>愿望激励把长期坚持和真实心愿连接起来。</li>
+            <li>Core 财务模块判断奖励是否能兑现，并支持手动记录开销。</li>
+          </ul>
+        </section>
+
+        <section id="scope" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>4. 范围边界</h2>
+            <div class="tags"><span class="tag ok">in scope</span><span class="tag danger">out of scope</span></div>
+          </div>
+          <div class="grid-2">
+            <div class="mini-card">
+              <strong>V1 包含</strong>
+              <ul>
+                <li>个人档案：训练目标、运动基础、身体状态、饮食偏好、预算基础信息。</li>
+                <li>日程输入：固定球局、临时网球课/羽毛球、今日可训练时间。</li>
+                <li>训练计划：基于周任务池生成今日训练，不写死课表。</li>
+                <li>饮食安排：根据今日训练和球类活动生成饮食建议。</li>
+                <li>灵活调整：跳过、改期、缩短、替换训练，并记录原因。</li>
+                <li>打卡记录：状态、训练、饮食、球类活动、计划变化、疼痛。</li>
+                <li>image2 动作图链路：生成 prompt、调用中转站、保存静态图片、复用。</li>
+                <li>愿望清单、卡片、卡册、小盲盒和标准盲盒。</li>
+                <li>Core 财务：预算设置、预算检查、心愿基金、预支判断、手动开销记录。</li>
+              </ul>
+            </div>
+            <div class="mini-card">
+              <strong>V1 不包含</strong>
+              <ul>
+                <li>用户注册、登录、多用户体系、云同步。</li>
+                <li>真实支付、自动购买、自动借贷。</li>
+                <li>支付宝、微信、淘宝、美团、银行等外部账单自动同步。</li>
+                <li>完整记账 App、投资理财建议、复杂财务报表。</li>
+                <li>社交、排行榜、好友监督。</li>
+                <li>医疗诊断、康复治疗方案。</li>
+                <li>大型食物数据库、扫码识别、拍照估算热量。</li>
+                <li>预生成完整动作图库、移动端原生 App。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="user-stories" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>5. 用户故事</h2>
+            <div class="tags"><span class="tag">requirements</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>场景</th><th>用户故事</th><th>验收标准</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>健身小白不知道怎么练</td><td>作为健身小白，我希望系统告诉我今天练什么、为什么练、怎么做，避免乱练和受伤。</td><td>今日计划包含训练目标、动作列表、组数、次数、强度、注意事项和替代动作。</td></tr>
+              <tr><td>用户有羽毛球/网球安排</td><td>作为经常打球的人，我希望系统把球类活动当作训练负荷，而不是普通备注。</td><td>当天有网球课或羽毛球时，系统会调整力量训练强度、训练部位和恢复建议。</td></tr>
+              <tr><td>计划经常变化</td><td>作为普通上班族，我希望今天不想练、没时间、临时有课时，可以调整计划。</td><td>用户可以跳过、缩短、替换、改期训练，并生成新的今日训练和饮食建议。</td></tr>
+              <tr><td>训练需要配套饮食</td><td>作为想提升运动表现的人，我希望训练计划同步告诉我今天怎么吃。</td><td>每日计划包含早餐、午餐、训练前、训练后、晚餐和饮水建议。</td></tr>
+              <tr><td>动作看不懂</td><td>作为新手，我希望动作有图文说明，减少错误动作。</td><td>动作详情页有文字步骤、注意事项、常见错误、image2 教学图；已有图片可复用。</td></tr>
+              <tr><td>想持续坚持</td><td>作为用户，我希望打卡不是压力签到，而是帮助系统理解我的真实执行。</td><td>支持完成、部分完成、跳过、疼痛、疲劳、饮食执行等多种打卡结果。</td></tr>
+              <tr><td>需要激励</td><td>作为用户，我希望坚持训练或学习后，可以获得和真实心愿相关的奖励。</td><td>有效打卡能获得卡片，集卡达到规则后可开启盲盒，奖项来自心愿清单。</td></tr>
+              <tr><td>奖励不能乱花钱</td><td>作为用户，我希望系统在兑换奖励前判断预算是否允许。</td><td>兑换心愿前必须经过 Core 财务预算检查，输出可兑换、建议推迟、转基金、可预支或禁止兑换。</td></tr>
+              <tr><td>需要记录开销</td><td>作为用户，我希望先手动记录支出，让预算判断有依据。</td><td>用户可以新增、编辑、删除开销，记录金额、分类、日期、来源、支付方式、关联目标或心愿。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="features" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>6. 功能模块</h2>
+            <div class="tags"><span class="tag ok">P0</span><span class="tag warn">P1</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>模块</th><th>优先级</th><th>V1 功能点</th><th>验收标准</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>个人档案</td><td>P0</td><td>身高体重、训练经验、目标、伤痛、饮食偏好、预算基础信息。</td><td>系统可基于档案生成训练、饮食和预算判断。</td></tr>
+              <tr><td>日程与灵活计划</td><td>P0</td><td>固定球局、临时课程、今日可用时间、计划调整。</td><td>今日计划能根据日程变化重新生成。</td></tr>
+              <tr><td>训练计划</td><td>P0</td><td>周任务池、今日训练、动作列表、强度控制、替代动作、训练后拉伸。</td><td>用户每天能获得一个包含训练主体和训练后拉伸的可执行方案。</td></tr>
+              <tr><td>饮食安排</td><td>P0</td><td>按训练日、球类日、恢复日生成饮食建议。</td><td>今日饮食会随训练变化同步调整。</td></tr>
+              <tr><td>打卡系统</td><td>P0</td><td>状态、训练、拉伸、饮食、球类、跳过、疼痛打卡。</td><td>打卡结果能影响后续计划和激励事件。</td></tr>
+              <tr><td>image2 动作图</td><td>P0</td><td>动作 prompt 生成、图片生成、静态存储、复用。</td><td>同一动作再次查看时优先读取已有图片。</td></tr>
+              <tr><td>愿望清单</td><td>P0</td><td>添加心愿、成本、优先级、类型、预算状态。</td><td>盲盒奖池只能来自用户自己的心愿。</td></tr>
+              <tr><td>卡片与盲盒</td><td>P1</td><td>有效打卡发卡、卡册进度、盲盒开启。</td><td>达到规则后可抽取合格心愿，不自动消费。</td></tr>
+              <tr><td>Core 财务</td><td>P0</td><td>预算设置、奖励预算、预算检查、心愿基金、预支判断。</td><td>任何奖励兑换前必须输出财务判断。</td></tr>
+              <tr><td>手动开销</td><td>P0</td><td>手动新增、编辑、删除、分类、关联心愿或目标。</td><td>开销会影响当期预算和兑换判断。</td></tr>
+              <tr><td>统计复盘</td><td>P1</td><td>训练完成率、饮食执行、打卡趋势、预算使用。</td><td>用户能看到阶段性执行情况和调整建议。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="flows" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>7. 核心流程</h2>
+            <div class="tags"><span class="tag">loop</span></div>
+          </div>
+          <h3>每日计划流程</h3>
+          <pre><code>读取个人档案
+  -> 读取固定日程和临时日程
+  -> 读取身体状态和历史打卡
+  -> 从周任务池选择今日训练
+  -> 生成今日饮食安排
+  -> 展示今日计划
+  -> 用户执行或调整
+  -> 打卡记录结果
+  -> 更新后续计划和激励进度</code></pre>
+
+          <h3>image2 动作图流程</h3>
+          <pre><code>用户打开动作详情
+  -> 检查本地/静态资源是否已有动作图
+  -> 有图：直接展示
+  -> 无图：根据动作结构生成 image2 prompt
+  -> 调用中转站 image2
+  -> 保存图片、prompt、动作版本
+  -> 后续同动作复用</code></pre>
+
+          <h3>愿望激励与财务流程</h3>
+          <pre><code>有效打卡
+  -> 发放卡片
+  -> 卡册进度增加
+  -> 达到条件开启盲盒
+  -> 从心愿清单抽取奖励
+  -> Core 财务检查预算
+  -> 预算够：允许用户确认兑换
+  -> 预算不足：推迟 / 转心愿基金 / 申请预支
+  -> 用户手动记录真实开销</code></pre>
+        </section>
+
+        <section id="architecture" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>8. 技术方案</h2>
+            <div class="tags"><span class="tag">local-first</span><span class="tag">React</span></div>
+          </div>
+          <p>V1 推荐本地优先 Web App，先满足个人长期使用，不引入用户系统、云数据库和外部支付账单接入。项目采用 monorepo、单仓库、双进程架构：前端和 Go 后端都放在同一个 GitHub 仓库内，按应用和包分区管理，本地运行时分别启动。</p>
+          <pre><code>React/Vite 前端
+  -> 页面、交互、IndexedDB/Dexie 本地业务数据
+  -> 通过 /api 和 /assets 访问 Go 服务
+
+Go 本地服务
+  -> image2 代理
+  -> 图片落盘
+  -> 静态图片访问
+  -> 后续账单导入和本地 API</code></pre>
+          <table>
+            <thead>
+              <tr><th>层面</th><th>推荐方案</th><th>理由</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>前端框架</td><td>React + TypeScript + Vite</td><td>适合快速构建本地个人应用，工程复杂度低。</td></tr>
+              <tr><td>路由</td><td>React Router</td><td>页面多但不需要 SSR。</td></tr>
+              <tr><td>状态管理</td><td>Zustand</td><td>比 Redux 简单，适合 MVP。</td></tr>
+              <tr><td>本地数据库</td><td>IndexedDB + Dexie</td><td>比 localStorage 更适合长期记录、资产 manifest、财务流水。</td></tr>
+              <tr><td>表单校验</td><td>react-hook-form + zod</td><td>减少表单样板代码，并保证数据结构可靠。</td></tr>
+              <tr><td>图表</td><td>Recharts</td><td>满足基础统计复盘，不做复杂 BI。</td></tr>
+              <tr><td>图标</td><td>lucide-react</td><td>轻量、统一、适合工具型界面。</td></tr>
+              <tr><td>后端服务</td><td>同仓库内集成 Go 本地后端服务</td><td>用于 image2 代理、图片落盘、静态图片访问、后续账单导入和本地 API，不默认使用 Node/Express。</td></tr>
+              <tr><td>image2</td><td>Go 本地服务代理调用中转站</td><td>API key 不能进前端，也不能提交到 GitHub。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>推荐 monorepo 目录结构</h3>
+          <pre><code>apps/
+  web/
+    src/
+      app/
+      core/
+        profile/
+        schedule/
+        tasks/
+        logs/
+        rewards/
+        finance/
+        assets/
+        db/
+      modules/
+        training/
+      pages/
+      shared/
+
+  server-go/
+    cmd/
+      ailifeos/
+    internal/
+      image2/
+      assets/
+      config/
+    storage/
+      exercise-images/
+
+packages/
+  schemas/
+  fixtures/
+  docs-shared/
+
+scripts/
+  test-image2.go
+  generate-exercise-image.go
+
+docs/</code></pre>
+          <p>图片访问建议：</p>
+          <pre><code>Go 保存图片：
+apps/server-go/storage/exercise-images/&lt;asset-id&gt;.png
+
+Go 暴露静态资源：
+GET /assets/exercise-images/&lt;asset-id&gt;.png
+
+前端访问方式：
+开发期通过 Vite proxy 访问 /assets，不在业务代码里硬编码 localhost:8080。</code></pre>
+        </section>
+
+        <section id="boundaries" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>9. 模块边界</h2>
+            <div class="tags"><span class="tag">core</span><span class="tag">modules</span></div>
+          </div>
+          <div class="grid-2">
+            <div class="mini-card">
+              <strong>core/finance</strong>
+              <p>管理收入、固定支出、自由预算、奖励预算、安全储备、开销记录、心愿基金、预支计划和预算检查。其他模块不能绕过它判断能不能花钱。</p>
+            </div>
+            <div class="mini-card">
+              <strong>core/rewards</strong>
+              <p>管理心愿清单、卡片、卡册、盲盒和兑换记录。抽中心愿后必须调用 core/finance 做预算检查。</p>
+            </div>
+            <div class="mini-card">
+              <strong>core/logs</strong>
+              <p>统一记录状态打卡、训练记录、饮食记录、疼痛记录、球类活动、计划变化和财务记录摘要。</p>
+            </div>
+            <div class="mini-card">
+              <strong>modules/training</strong>
+              <p>负责训练计划、饮食计划、动作库、安全规则、今日计划和打卡。它可以写日志、发 RewardEvent，但不能直接发卡或判断预算。</p>
+            </div>
+          </div>
+
+          <h3>边界示例</h3>
+          <pre><code>训练完成打卡
+  -> modules/training 计算完成度和安全状态
+  -> core/logs 写入 CheckIn / TrainingLog
+  -> core/rewards 接收 RewardEvent
+  -> core/rewards 判断是否发卡</code></pre>
+          <pre><code>抽中心愿
+  -> core/rewards 生成 DrawResult
+  -> core/finance 执行预算检查
+  -> 用户确认兑换 / 推迟 / 转心愿基金 / 申请预支
+  -> core/logs 写入兑换结果</code></pre>
+          <h3>模块故障隔离</h3>
+          <ul>
+            <li>模块之间只能通过明确 service contract 协作，不能跨模块直接读写内部状态。</li>
+            <li>Core 财务异常时，训练计划、打卡、动作详情、本地记录仍应可用；心愿兑换显示财务检查不可用并允许稍后重试。</li>
+            <li>image2 或 Go 服务不可用时，动作详情仍展示文字步骤、风险提示和 prompt，图片状态显示生成失败或待重试。</li>
+            <li>愿望激励异常时，训练和打卡不受影响，RewardEvent 可以进入待处理队列。</li>
+            <li>所有跨模块调用都要返回可解释错误，页面做局部降级，不做整页崩溃。</li>
+          </ul>
+        </section>
+
+        <section id="data" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>10. 数据对象</h2>
+            <div class="tags"><span class="tag">data model</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>对象</th><th>所属模块</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>UserProfile</td><td>core/profile</td><td>个人基础信息、训练经验、运动背景、伤病、饮食偏好、预算习惯。</td></tr>
+              <tr><td>ScheduleEvent</td><td>core/schedule</td><td>固定球局、临时课程、可训练时间、休息日。</td></tr>
+              <tr><td>Task</td><td>core/tasks</td><td>今日训练、饮食、打卡、记录开销等可执行事项。</td></tr>
+              <tr><td>DailyPlan</td><td>modules/training</td><td>今日训练、训练后拉伸、饮食、推荐理由、风险和可调整方案。</td></tr>
+              <tr><td>Exercise</td><td>modules/training</td><td>动作名、器械、步骤、目标肌群、常见错误、停止信号、替代动作。</td></tr>
+              <tr><td>CheckIn</td><td>core/logs</td><td>状态、训练、拉伸、饮食、球类、计划变化、疼痛等低摩擦输入。</td></tr>
+              <tr><td>RewardEvent</td><td>core/rewards</td><td>由有效打卡和目标进度产生，用于发卡。</td></tr>
+              <tr><td>Card / CardAlbum</td><td>core/rewards</td><td>卡片和卡册进度。</td></tr>
+              <tr><td>WishItem</td><td>core/rewards</td><td>用户心愿，包含成本、优先级、等级、预算状态。</td></tr>
+              <tr><td>BlindBox / DrawResult</td><td>core/rewards</td><td>盲盒规则和抽取结果。</td></tr>
+              <tr><td>FinanceProfile</td><td>core/finance</td><td>收入、固定支出、安全储备、奖励预算比例。</td></tr>
+              <tr><td>ExpenseLog</td><td>core/finance</td><td>手动开销记录，预留外部来源字段。</td></tr>
+              <tr><td>FinanceDecision</td><td>core/finance</td><td>预算检查结果：可兑换、谨慎、推迟、转基金、可预支、禁止。</td></tr>
+              <tr><td>ImageAsset</td><td>core/assets</td><td>动作图路径、prompt、状态、版本和生成来源。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="interfaces" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>11. 服务接口</h2>
+            <div class="tags"><span class="tag">service contract</span></div>
+          </div>
+          <pre><code>interface TrainingPlanService {
+  generateWeeklyTaskPool(input: ProfileContext): Promise&lt;WeeklyTaskPool&gt;;
+  generateDailyPlan(input: DailyPlanInput): Promise&lt;DailyPlan&gt;;
+  reschedulePlan(input: PlanChangeInput): Promise&lt;DailyPlan&gt;;
+}
+
+interface CheckInService {
+  createCheckIn(input: CreateCheckInInput): Promise&lt;CheckIn&gt;;
+  convertToRewardEvent(checkIn: CheckIn): RewardEvent | null;
+}
+
+interface RewardService {
+  handleRewardEvent(event: RewardEvent): Promise&lt;Card[]&gt;;
+  openBlindBox(boxId: string): Promise&lt;DrawResult&gt;;
+  requestRedemption(drawResultId: string): Promise&lt;FinanceDecision&gt;;
+}
+
+interface FinanceService {
+  getCurrentBudgetStatus(): Promise&lt;BudgetStatus&gt;;
+  checkBudget(input: BudgetCheckInput): Promise&lt;FinanceDecision&gt;;
+  recordExpense(input: CreateExpenseInput): Promise&lt;ExpenseLog&gt;;
+  createWishFund(input: CreateWishFundInput): Promise&lt;WishFund&gt;;
+  createAdvancePlan(input: AdvancePlanInput): Promise&lt;AdvancePlan&gt;;
+}
+
+interface LogService {
+  appendLog(input: CreateLogInput): Promise&lt;LogEntry&gt;;
+  listTimeline(filter: LogFilter): Promise&lt;LogEntry[]&gt;;
+}</code></pre>
+        </section>
+
+        <section id="image2" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>12. image2 安全链路</h2>
+            <div class="tags"><span class="tag danger">key boundary</span><span class="tag">asset</span></div>
+          </div>
+          <ul>
+            <li><code>IMAGE_API_KEY</code> 只放 <code>.env.local</code>。</li>
+            <li><code>.env.local</code> 必须进入 <code>.gitignore</code>。</li>
+            <li>前端不能直接请求 image2 或中转站。</li>
+            <li>前端只能请求本地服务，例如 <code>POST /api/image2/exercise-image</code>。</li>
+            <li>本地服务优先使用 Go 实现，读取 key，调用中转站，生成图片后保存静态资源。</li>
+            <li>数据库只保存图片路径、prompt、状态、版本，不保存 key。</li>
+            <li>prompt 由结构化 <code>Exercise</code> 生成，不能让用户自由拼接敏感参数。</li>
+          </ul>
+          <pre><code>用户打开动作详情
+  -> 前端查询 Asset
+  -> missing/regenerate
+  -> 前端请求本地服务
+  -> Go 本地服务读取 .env.local
+  -> 调用中转站 image2
+  -> 保存图片
+  -> 更新 Asset manifest / IndexedDB
+  -> 前端展示静态图片</code></pre>
+        </section>
+
+        <section id="finance" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>13. 财务与账单边界</h2>
+            <div class="tags"><span class="tag ok">manual first</span><span class="tag warn">future import</span></div>
+          </div>
+          <p>V1 财务模块是 Core 能力，但第一版只做手动预算和手动开销，不接外部账单自动同步。</p>
+          <div class="grid-3">
+            <div class="mini-card">
+              <strong>MVP</strong>
+              <p>手动添加开销，支持金额、分类、时间、支付方式、来源、备注、关联心愿或目标。</p>
+            </div>
+            <div class="mini-card">
+              <strong>后续</strong>
+              <p>支持 CSV、截图识别或账单文件导入，用于支付宝、微信、银行卡、信用卡等账单。</p>
+            </div>
+            <div class="mini-card">
+              <strong>长期</strong>
+              <p>条件允许时接入美团、淘宝、支付宝、银行等官方或可信账单来源，只读导入，不自动支付。</p>
+            </div>
+          </div>
+          <ul>
+            <li>V1 所有开销来源默认为 <code>manual</code>。</li>
+            <li>数据对象预留 <code>source</code>、<code>sourceRecordId</code>、<code>importBatchId</code>、<code>reviewStatus</code>。</li>
+            <li>不保存明文账号、密码、支付密码或银行卡敏感信息。</li>
+            <li>外部来源的数据只能辅助预算判断，用户可以手动修正最终分类和金额。</li>
+          </ul>
+        </section>
+
+        <section id="milestones" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>14. 工程里程碑</h2>
+            <div class="tags"><span class="tag">delivery</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>里程碑</th><th>目标</th><th>核心任务</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>0. 需求基线与工程约束</td><td>锁定范围和技术方向。</td><td>整理 V1 范围、非目标、模块依赖图、技术方案。</td></tr>
+              <tr><td>1. 数据模型与应用骨架</td><td>建立可启动应用和核心模型。</td><td>搭建 React/Vite、IndexedDB/Dexie、基础路由、核心类型。</td></tr>
+              <tr><td>2. 个人档案、日程、任务</td><td>建立计划生成输入。</td><td>个人档案、固定/临时日程、任务状态。</td></tr>
+              <tr><td>3. 训练 + 饮食闭环</td><td>让用户每天知道练什么、怎么拉伸、怎么吃。</td><td>周任务池、今日训练、训练后拉伸、饮食安排、计划调整。</td></tr>
+              <tr><td>4. image2 Prompt 与资产</td><td>动作详情图文并茂。</td><td>prompt 生成、本地服务调用、图片缓存、资产 manifest。</td></tr>
+              <tr><td>5. 打卡与记录系统</td><td>低摩擦沉淀真实执行数据。</td><td>状态/训练/饮食/球类/疼痛/计划变化打卡，统一记录流。</td></tr>
+              <tr><td>6. 愿望激励系统</td><td>把有效行动转成卡片和心愿激励。</td><td>心愿清单、卡片、卡册、小盲盒、标准盲盒。</td></tr>
+              <tr><td>7. Core 财务与手动开销</td><td>预算守护奖励兑换。</td><td>财务档案、预算、手动开销、心愿基金、FinanceDecision、预支。</td></tr>
+              <tr><td>8. 统计与复盘</td><td>让用户看到进展和风险。</td><td>训练统计、饮食执行、打卡趋势、预算使用、周复盘。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>推荐开发顺序</h3>
+          <ol>
+            <li>文档基线与技术方案。</li>
+            <li>本地应用骨架。</li>
+            <li>数据模型。</li>
+            <li>个人档案。</li>
+            <li>日程系统。</li>
+            <li>任务系统。</li>
+            <li>训练计划。</li>
+            <li>饮食建议。</li>
+            <li>打卡记录。</li>
+            <li>image2 prompt 生成。</li>
+            <li>image2 调用与图片缓存。</li>
+            <li>心愿清单。</li>
+            <li>卡片和盲盒。</li>
+            <li>Core 财务预算。</li>
+            <li>手动开销。</li>
+            <li>心愿兑现财务判断。</li>
+            <li>统计复盘。</li>
+            <li>UI 统一打磨。</li>
+          </ol>
+        </section>
+
+        <section id="pages" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>15. 页面范围</h2>
+            <div class="tags"><span class="tag ok">V1 pages</span><span class="tag warn">defer</span></div>
+          </div>
+          <div class="grid-2">
+            <div class="mini-card">
+              <strong>V1 必做页面</strong>
+              <ul>
+                <li>首页 / 今日面板</li>
+                <li>个人档案页</li>
+                <li>日程页</li>
+                <li>今日训练与饮食页</li>
+                <li>动作详情页</li>
+                <li>image2 prompt / 图片生成页</li>
+                <li>打卡页</li>
+                <li>记录页</li>
+                <li>心愿清单页</li>
+                <li>卡册 / 盲盒页</li>
+                <li>财务总览页</li>
+                <li>手动开销页</li>
+                <li>统计页</li>
+              </ul>
+            </div>
+            <div class="mini-card">
+              <strong>V1 延后页面</strong>
+              <ul>
+                <li>外部账单导入页</li>
+                <li>支付宝 / 淘宝 / 美团 / 银行授权页</li>
+                <li>多设备同步设置</li>
+                <li>社交分享页</li>
+                <li>AI Agent 工作台</li>
+                <li>高级营养分析页</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="acceptance" class="doc-section" data-status="active">
+          <div class="section-head">
+            <h2>16. V1 完成标准</h2>
+            <div class="tags"><span class="tag ok">definition of done</span></div>
+          </div>
+          <p>V1 完成时，用户应该可以完整走完一次真实生活流程：</p>
+          <pre><code>设置个人档案
+  -> 设置每周三打球
+  -> 生成今日训练、训练后拉伸和饮食
+  -> 查看某个动作说明
+  -> 生成动作教学图
+  -> 完成或调整今日计划
+  -> 打卡
+  -> 获得卡片
+  -> 积累卡片后开盲盒
+  -> 抽中心愿
+  -> 财务模块判断预算是否足够
+  -> 用户选择兑现 / 推迟 / 转入心愿基金 / 预支
+  -> 手动记录相关开销
+  -> 在统计页看到训练、饮食、财务、激励进展</code></pre>
+          <ul>
+            <li>用户不需要懂健身，也能知道今天该练什么、怎么练、练后怎么拉伸、怎么吃。</li>
+            <li>用户临时有球局、没时间、不想练时，计划不会崩，而是能重排。</li>
+            <li>用户能通过打卡留下真实执行数据，而不是只有成功/失败。</li>
+            <li>动作图不预生成，按需生成并可复用，避免浪费 image2 调用。</li>
+            <li>愿望激励能形成持续动力，但不会绕过预算。</li>
+            <li>Core 财务能作为跨模块基础能力，支撑奖励兑换和手动开销记录。</li>
+            <li>V1 在无用户系统、无云数据库、无支付、无外部账单接入的情况下仍能完整跑通。</li>
+          </ul>
+        </section>
+
+        <footer>
+          <p>维护规则：V1 范围、功能优先级、技术方案、模块边界或工程里程碑变化时，必须同步更新本文档。</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

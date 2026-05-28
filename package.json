@@ -1,0 +1,19 @@
+{
+  "name": "ailifeos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/web",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm --workspace apps/web run dev",
+    "dev:server": "go run ./apps/server-go/cmd/ailifeos",
+    "build:web": "npm --workspace apps/web run build",
+    "typecheck": "npm --workspace apps/web run typecheck",
+    "test:server": "go test ./apps/server-go/...",
+    "check": "npm run typecheck && npm run test:server"
+  }
+}
+

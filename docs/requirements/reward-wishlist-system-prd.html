@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>愿望清单与集卡盲盒激励系统 PRD</title>
+    <meta
+      name="description"
+      content="AiLifeOS 跨模块激励系统：愿望清单、有效打卡、集卡、盲盒、奖励兑换和风控规则。"
+    >
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f8;
+        --panel: #ffffff;
+        --panel-soft: #fafafa;
+        --text: #1f2328;
+        --muted: #606a75;
+        --border: #d8dee4;
+        --accent: #2563eb;
+        --accent-soft: #eff6ff;
+        --success: #15803d;
+        --warning: #b45309;
+        --danger: #b91c1c;
+        --code: #f1f5f9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Microsoft YaHei",
+          sans-serif;
+        line-height: 1.65;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      aside {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        border-right: 1px solid var(--border);
+        background: var(--panel);
+        padding: 24px 18px;
+      }
+
+      main {
+        width: 100%;
+        max-width: 1120px;
+        padding: 40px 48px 80px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.25;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      h2 {
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+
+      h3 {
+        font-size: 18px;
+        margin: 22px 0 10px;
+      }
+
+      p {
+        margin: 10px 0;
+      }
+
+      ul,
+      ol {
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 10px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--panel-soft);
+        font-weight: 650;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      code,
+      pre {
+        font-family:
+          "SFMono-Regular",
+          Consolas,
+          "Liberation Mono",
+          monospace;
+      }
+
+      code {
+        background: var(--code);
+        border-radius: 4px;
+        padding: 2px 5px;
+      }
+
+      pre {
+        overflow: auto;
+        margin: 14px 0;
+        padding: 14px 16px;
+        background: var(--code);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        line-height: 1.55;
+      }
+
+      .eyebrow {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 650;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .summary {
+        max-width: 860px;
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .nav-title {
+        margin-bottom: 14px;
+        font-size: 18px;
+        font-weight: 750;
+      }
+
+      .nav-note {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 18px;
+      }
+
+      nav a {
+        display: block;
+        border-radius: 6px;
+        padding: 6px 8px;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      nav a:hover {
+        background: var(--accent-soft);
+        text-decoration: none;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .meta-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 12px;
+      }
+
+      .meta-item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+
+      .meta-item span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .doc-section {
+        margin-top: 28px;
+        padding: 24px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: flex-end;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 2px 8px;
+        background: var(--panel-soft);
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .tag.active {
+        border-color: #bfdbfe;
+        background: var(--accent-soft);
+        color: #1d4ed8;
+      }
+
+      .tag.safe {
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+        color: var(--success);
+      }
+
+      .tag.warn {
+        border-color: #fed7aa;
+        background: #fff7ed;
+        color: var(--warning);
+      }
+
+      .tag.danger {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: var(--danger);
+      }
+
+      .callout {
+        margin: 14px 0;
+        padding: 12px 14px;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        background: var(--accent-soft);
+      }
+
+      .callout strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .mini-card {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        background: var(--panel-soft);
+      }
+
+      .mini-card strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      footer {
+        margin-top: 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 920px) {
+        .layout {
+          display: block;
+        }
+
+        aside {
+          position: static;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        main {
+          padding: 28px 18px 56px;
+        }
+
+        .meta-grid,
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          display: block;
+        }
+
+        .tags {
+          justify-content: flex-start;
+          margin-top: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside aria-label="文档目录">
+        <div class="nav-title">愿望激励 PRD</div>
+        <div class="nav-note">跨模块愿望清单、集卡、盲盒和兑换规则。</div>
+        <nav>
+          <a href="#positioning">1. 定位</a>
+          <a href="#principles">2. 设计原则</a>
+          <a href="#loop">3. 核心闭环</a>
+          <a href="#concepts">4. 核心概念</a>
+          <a href="#earning">5. 发卡机制</a>
+          <a href="#wish-list">6. 心愿清单</a>
+          <a href="#blind-box">7. 盲盒机制</a>
+          <a href="#redemption">8. 兑换机制</a>
+          <a href="#budget">9. 预算与预支</a>
+          <a href="#cross-module">10. 跨模块接入</a>
+          <a href="#pages">11. 页面需求</a>
+          <a href="#data">12. 数据对象</a>
+          <a href="#rules">13. 风控规则</a>
+          <a href="#mvp">14. MVP 范围</a>
+          <a href="#acceptance">15. 验收标准</a>
+          <a href="#open-questions">16. 未决问题</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header>
+          <div class="eyebrow">Product Requirements Document</div>
+          <h1>愿望清单与集卡盲盒激励系统 PRD</h1>
+          <p class="summary">
+            本文档定义 AiLifeOS 的跨模块激励系统。它借鉴低摩擦打卡、连贯反馈和可视化进度的产品思路，但不做付费抽奖和社交排名。系统通过有效打卡发放卡片，用户集卡后开启盲盒，盲盒奖励来自用户自己的心愿清单。
+          </p>
+
+          <div class="meta-grid" aria-label="文档元信息">
+            <div class="meta-item">
+              <strong>所属项目</strong>
+              <span>AiLifeOS</span>
+            </div>
+            <div class="meta-item">
+              <strong>模块类型</strong>
+              <span>Core 跨模块能力</span>
+            </div>
+            <div class="meta-item">
+              <strong>文档状态</strong>
+              <span>产品设计基线</span>
+            </div>
+            <div class="meta-item">
+              <strong>关键边界</strong>
+              <span>非付费抽奖，非社交排名</span>
+            </div>
+          </div>
+        </header>
+
+        <section id="positioning" class="doc-section" data-status="active" data-module="rewards">
+          <div class="section-head">
+            <h2>1. 定位</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">core</span></div>
+          </div>
+          <p>愿望激励系统是 AiLifeOS 的 Core 能力，不属于训练模块或学习模块私有功能。</p>
+          <p>训练、学习、健康、工作等模块负责产出有效打卡、目标进度和里程碑事件；愿望激励系统统一负责发卡、集卡、盲盒、心愿清单、兑换和风控。</p>
+          <div class="callout">
+            <strong>一句话定位</strong>
+            把长期坚持转化为可见卡片，再把卡片连接到用户真正想要的心愿奖励。
+          </div>
+        </section>
+
+        <section id="principles" class="doc-section" data-status="active" data-module="principles">
+          <div class="section-head">
+            <h2>2. 设计原则</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag safe">responsible</span></div>
+          </div>
+          <ul>
+            <li>激励服务目标，不反过来绑架目标。</li>
+            <li>卡片只能通过真实行动获得，不能付费购买。</li>
+            <li>盲盒只抽用户自己的心愿清单，不做外部商业抽奖。</li>
+            <li>大额心愿需要通过财务系统做预算确认和冷静期，不能自动触发消费。</li>
+            <li>预算不足时优先推迟、转为心愿基金进度，谨慎允许预支。</li>
+            <li>恢复、降级、合理跳过也可以算有效行为，避免为了集卡而过度训练。</li>
+            <li>规则透明、可解释、可关闭，不制造连续签到焦虑。</li>
+            <li>奖励要提升长期执行，不鼓励短期刷任务。</li>
+          </ul>
+        </section>
+
+        <section id="loop" class="doc-section" data-status="active" data-module="loop">
+          <div class="section-head">
+            <h2>3. 核心闭环</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">loop</span></div>
+          </div>
+          <pre><code>设定目标
+  -> 创建心愿清单
+  -> 完成有效打卡
+  -> 获得卡片
+  -> 收集到卡册
+  -> 达到盲盒开启条件
+  -> 从心愿清单抽取奖励
+  -> 财务系统检查预算
+  -> 用户确认预算、预支或推迟
+  -> 兑换、推迟、预支或转为心愿进度
+  -> 记录奖励历史，进入复盘</code></pre>
+          <p>这个闭环连接的是“我今天做了什么”和“我真正想要什么”。它不是为了让用户沉迷抽卡，而是为长期目标提供情绪反馈和延迟满足机制。</p>
+        </section>
+
+        <section id="concepts" class="doc-section" data-status="active" data-module="model">
+          <div class="section-head">
+            <h2>4. 核心概念</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">model</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>概念</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>有效打卡</td><td>来自训练、学习、健康等模块的有效行为记录。跳过但说明合理原因，也可以是有效打卡。</td></tr>
+              <tr><td>卡片</td><td>用户完成有效行为后获得的激励资产，可以按模块、主题、稀有度和周期归档。</td></tr>
+              <tr><td>卡册</td><td>卡片集合，例如“训练适应期卡册”“学习冲刺卡册”“健康恢复卡册”。</td></tr>
+              <tr><td>心愿清单</td><td>用户自己维护的奖励池，可以包含物品、旅行、体验、学习资源、服务等。</td></tr>
+              <tr><td>盲盒</td><td>消耗卡片或达成阶段目标后开启，从合格心愿池中抽取奖励。</td></tr>
+              <tr><td>心愿进度</td><td>大额心愿不一定一次解锁，可以通过多次盲盒增加进度。</td></tr>
+              <tr><td>心愿基金</td><td>为某个心愿预留的预算进度，可以由用户手动存入或由盲盒结果转入。</td></tr>
+              <tr><td>预支</td><td>预算不足但用户仍想兑换时，占用未来可自由支配预算的受控机制。</td></tr>
+              <tr><td>兑换</td><td>用户确认预算、时机和必要条件后，将抽中的心愿转为实际行动。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="earning" class="doc-section" data-status="active" data-module="cards">
+          <div class="section-head">
+            <h2>5. 发卡机制</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">cards</span></div>
+          </div>
+          <h3>卡片类型</h3>
+          <table>
+            <thead>
+              <tr><th>卡片</th><th>获得条件</th><th>设计目的</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>行动卡</td><td>完成一次有效打卡。</td><td>给每日行动即时反馈。</td></tr>
+              <tr><td>坚持卡</td><td>连续完成计划内行动，或一周完成指定次数。</td><td>强化稳定性，而不是强迫每天都做同一件事。</td></tr>
+              <tr><td>里程碑卡</td><td>完成阶段目标，例如训练适应期第 1 周。</td><td>强化阶段成果。</td></tr>
+              <tr><td>恢复卡</td><td>按计划完成恢复、拉伸、休息或疼痛保护。</td><td>避免用户为了集卡过度训练。</td></tr>
+              <tr><td>调整卡</td><td>合理跳过、降级、改期并记录原因。</td><td>把现实变化纳入系统，而不是惩罚变化。</td></tr>
+              <tr><td>突破卡</td><td>达成个人最佳、完成困难任务、连续复盘。</td><td>记录具有纪念意义的进步。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>发卡规则</h3>
+          <ul>
+            <li>每天可获得卡片数量有上限，防止刷任务。</li>
+            <li>同一低价值行为不能反复刷卡。</li>
+            <li>安全行为可以发卡，例如按疼痛规则停止训练。</li>
+            <li>不同模块的卡片可以进入同一个总卡册，也可以保留模块主题卡册。</li>
+            <li>卡片稀有度由任务难度、连续性、阶段意义和安全质量共同决定。</li>
+          </ul>
+
+          <h3>稀有度建议</h3>
+          <table>
+            <thead>
+              <tr><th>稀有度</th><th>来源</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>基础</td><td>普通有效打卡。</td><td>用于开启小盲盒。</td></tr>
+              <tr><td>进阶</td><td>完成计划内训练、学习任务或完整复盘。</td><td>用于标准盲盒或心愿进度。</td></tr>
+              <tr><td>稀有</td><td>周目标完成、阶段目标完成、恢复策略执行良好。</td><td>用于高价值盲盒。</td></tr>
+              <tr><td>纪念</td><td>长期里程碑、个人突破、特殊节点。</td><td>主要用于卡册收藏，不轻易消耗。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="wish-list" class="doc-section" data-status="active" data-module="wishlist">
+          <div class="section-head">
+            <h2>6. 心愿清单</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">wishlist</span></div>
+          </div>
+          <p>心愿清单是盲盒奖励池。用户可以添加任何对自己有意义的奖励，不限制品类，但系统要帮助用户标记预算、优先级和适合的解锁条件。</p>
+          <table>
+            <thead>
+              <tr><th>字段</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>名称</td><td>例如买一部手机、去旅行、买网球课、看一场演出。</td></tr>
+              <tr><td>类型</td><td>物品、体验、旅行、学习、服务、休息、社交、自定义。</td></tr>
+              <tr><td>预估成本</td><td>用于预算保护，不作为系统自动消费依据。</td></tr>
+              <tr><td>优先级</td><td>用户主观想要程度。</td></tr>
+              <tr><td>等级</td><td>小心愿、标准心愿、大心愿、长期心愿。</td></tr>
+              <tr><td>预算状态</td><td>可立即兑换、需要确认、需要储蓄、暂不可兑换。</td></tr>
+              <tr><td>冷静期</td><td>大额或冲动型心愿需要等待再确认。</td></tr>
+              <tr><td>适用模块</td><td>可限定由训练、学习或综合卡片触发。</td></tr>
+              <tr><td>状态</td><td>草稿、可进入盲盒、已抽中、已兑换、推迟、归档。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="blind-box" class="doc-section" data-status="active" data-module="blind-box">
+          <div class="section-head">
+            <h2>7. 盲盒机制</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag warn">controlled random</span></div>
+          </div>
+          <p>盲盒是一种可控随机反馈，不是赌博机制。它不接受付费购买次数，不提供现金奖励，不对外部奖品做商业抽奖。</p>
+          <table>
+            <thead>
+              <tr><th>盲盒等级</th><th>开启条件示例</th><th>奖池</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>小盲盒</td><td>7 张基础卡，或一周完成 3 次有效打卡。</td><td>低成本小心愿、休息体验、小奖励。</td></tr>
+              <tr><td>标准盲盒</td><td>21 张卡，或完成一个周目标。</td><td>标准心愿、学习资源、运动装备小件。</td></tr>
+              <tr><td>阶段盲盒</td><td>完成阶段目标，例如训练适应期 4 周。</td><td>高优先级心愿、旅行进度、大额心愿进度。</td></tr>
+              <tr><td>纪念盲盒</td><td>半年目标完成、重大突破。</td><td>长期心愿、重要体验、纪念级奖励。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>抽取规则</h3>
+          <ul>
+            <li>只有状态为“可进入盲盒”的心愿可以进入奖池。</li>
+            <li>盲盒会按心愿等级、预算状态、优先级和冷静期筛选奖池。</li>
+            <li>如果没有合格心愿，盲盒转为“心愿进度”或提示用户补充心愿清单。</li>
+            <li>大额心愿优先抽取“进度”，不默认一次性兑换。</li>
+            <li>抽取概率或权重必须可解释，至少对用户展示规则摘要。</li>
+            <li>同一心愿抽中后进入冷却，避免短期重复出现。</li>
+          </ul>
+        </section>
+
+        <section id="redemption" class="doc-section" data-status="active" data-module="redemption">
+          <div class="section-head">
+            <h2>8. 兑换机制</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag safe">budget guard</span></div>
+          </div>
+          <p>抽中不等于自动消费。AiLifeOS 只能给出“你已经达成兑换资格”，实际购买、旅行或消费需要用户再次确认，并通过财务系统进行预算检查。</p>
+          <pre><code>抽中心愿
+  -> 展示达成条件和原因
+  -> 财务系统检查预算状态、心愿基金、冷静期和预支资格
+  -> 用户选择：立即兑换 / 推迟 / 转为进度 / 申请预支 / 放弃并返还部分卡片
+  -> 记录兑换历史
+  -> 周复盘记录奖励对执行的影响</code></pre>
+          <ul>
+            <li>小心愿可以直接兑换，但仍需要用户确认。</li>
+            <li>大心愿需要预算确认，可拆成多个心愿基金进度节点。</li>
+            <li>预算不足时默认不建议兑换，优先转为心愿基金进度或推迟。</li>
+            <li>用户选择预支时，必须显示未来预算影响、偿还计划和冷却期。</li>
+            <li>用户可以把抽中的奖励推迟，系统不应该强迫立即消费。</li>
+            <li>兑换记录应该进入复盘，判断激励是否真的提升执行。</li>
+          </ul>
+        </section>
+
+        <section id="budget" class="doc-section" data-status="active" data-module="budget">
+          <div class="section-head">
+            <h2>9. 预算与预支</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag safe">budget guard</span></div>
+          </div>
+          <p>愿望激励系统不能独立判断用户是否应该消费。所有心愿兑换都必须读取轻量财务系统的预算状态。</p>
+          <table>
+            <thead>
+              <tr><th>预算结果</th><th>系统建议</th><th>用户操作</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>预算充足</td><td>允许兑换，但仍需确认。</td><td>立即兑换 / 推迟。</td></tr>
+              <tr><td>预算接近上限</td><td>提示谨慎，建议推迟或部分兑换。</td><td>推迟 / 转心愿基金 / 继续确认。</td></tr>
+              <tr><td>预算不足</td><td>不建议兑换。</td><td>转心愿基金 / 推迟 / 申请预支。</td></tr>
+              <tr><td>安全储备不足</td><td>禁止大额兑换和预支。</td><td>只能推迟或转进度。</td></tr>
+              <tr><td>已有未还预支</td><td>限制新的预支。</td><td>先完成偿还计划。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>预支规则</h3>
+          <ul>
+            <li>预支不是额外收入，而是占用未来可自由支配预算。</li>
+            <li>预支必须生成偿还计划，例如未来 4 周每周减少娱乐预算。</li>
+            <li>预支有上限，不能超过未来可自由支配预算的一定比例。</li>
+            <li>存在必要支出风险、安全储备不足或已有未还预支时，不允许新预支。</li>
+            <li>预支成功后进入冷却期，冷却期内不能再开高价值盲盒。</li>
+            <li>用户可以取消预支申请，心愿转回心愿基金进度。</li>
+          </ul>
+          <p>详细预算规则见 <a href="finance-budget-system-prd.html">docs/requirements/finance-budget-system-prd.html</a>。</p>
+        </section>
+
+        <section id="cross-module" class="doc-section" data-status="active" data-module="integration">
+          <div class="section-head">
+            <h2>10. 跨模块接入</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">integration</span></div>
+          </div>
+          <p>各模块不直接处理奖励逻辑，只发送标准事件给激励系统。</p>
+          <table>
+            <thead>
+              <tr><th>模块</th><th>可产出事件</th><th>可获得卡片</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>训练</td><td>状态打卡、训练完成、恢复完成、疼痛保护、周目标完成。</td><td>行动卡、恢复卡、里程碑卡、突破卡。</td></tr>
+              <tr><td>学习</td><td>学习打卡、阅读完成、复习完成、阶段测验、项目交付。</td><td>行动卡、坚持卡、里程碑卡。</td></tr>
+              <tr><td>健康</td><td>睡眠记录、饮水、拉伸、恢复、疼痛记录。</td><td>恢复卡、行动卡。</td></tr>
+              <tr><td>工作</td><td>任务完成、项目推进、复盘完成。</td><td>行动卡、突破卡。</td></tr>
+              <tr><td>日程</td><td>按计划完成、合理改期、冲突处理。</td><td>调整卡、坚持卡。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="pages" class="doc-section" data-status="active" data-module="ui">
+          <div class="section-head">
+            <h2>11. 页面需求</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">UI</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>页面</th><th>作用</th><th>关键内容</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>激励首页</td><td>展示当前卡片进度和下一个可开启盲盒。</td><td>今日可得卡、卡片进度、盲盒进度、最近奖励。</td></tr>
+              <tr><td>心愿清单</td><td>管理所有想要的奖励。</td><td>心愿列表、预算状态、优先级、等级、是否进入奖池。</td></tr>
+              <tr><td>卡册</td><td>展示已获得卡片。</td><td>按模块、周期、稀有度筛选，收藏纪念卡。</td></tr>
+              <tr><td>盲盒页</td><td>开启盲盒和查看规则。</td><td>开启条件、可能奖池、规则摘要、冷却提示。</td></tr>
+              <tr><td>兑换页</td><td>确认是否兑换抽中心愿。</td><td>预算确认、冷静期、兑换/推迟/转进度。</td></tr>
+              <tr><td>预算确认页</td><td>判断心愿是否可兑换或可预支。</td><td>可用预算、心愿基金、预支影响、偿还计划。</td></tr>
+              <tr><td>奖励历史</td><td>查看过去抽中和兑换记录。</td><td>抽中记录、兑换记录、推迟记录、复盘影响。</td></tr>
+              <tr><td>激励设置</td><td>控制规则强度和提醒。</td><td>是否启用、每日上限、提醒、盲盒冷却、预算保护。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="data" class="doc-section" data-status="active" data-module="data">
+          <div class="section-head">
+            <h2>12. 数据对象</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">data</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>对象</th><th>核心字段</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>RewardEvent</td><td>sourceModule、eventType、date、qualityScore、safetyFlags、relatedGoalId</td></tr>
+              <tr><td>Card</td><td>id、type、rarity、sourceModule、earnedAt、albumId、isConsumable</td></tr>
+              <tr><td>CardAlbum</td><td>id、name、moduleScope、period、cards、completionRate</td></tr>
+              <tr><td>WishItem</td><td>title、category、estimatedCost、priority、tier、budgetStatus、cooldownUntil、status</td></tr>
+              <tr><td>WishPool</td><td>eligibleWishIds、boxTier、filters、weightRules</td></tr>
+              <tr><td>BlindBox</td><td>tier、requiredCards、eligiblePool、cooldown、openedAt、status</td></tr>
+              <tr><td>DrawResult</td><td>boxId、wishItemId、resultType、progressValue、createdAt</td></tr>
+              <tr><td>BudgetCheck</td><td>wishItemId、availableBudget、wishFundBalance、result、riskLevel、recommendation</td></tr>
+              <tr><td>AdvancePlan</td><td>wishItemId、amount、repayPeriods、repayAmountPerPeriod、cooldownUntil、status</td></tr>
+              <tr><td>Redemption</td><td>wishItemId、status、confirmedAt、budgetConfirmed、advancePlanId、notes</td></tr>
+              <tr><td>RewardSettings</td><td>enabled、dailyCardLimit、cooldownDays、budgetGuardEnabled、remindersEnabled</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="rules" class="doc-section" data-status="active" data-module="rules">
+          <div class="section-head">
+            <h2>13. 风控规则</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag danger">guardrails</span></div>
+          </div>
+          <ul>
+            <li>不允许付费购买卡片、抽奖次数或稀有度。</li>
+            <li>不提供现金、返现、证券、虚拟博彩类奖励。</li>
+            <li>大额心愿必须经过预算确认，必要时进入冷静期。</li>
+            <li>预算不足时不默认兑换，必须推迟、转心愿基金或走预支流程。</li>
+            <li>预支必须有上限、偿还计划和冷却期。</li>
+            <li>安全储备不足时禁止预支和大额兑换。</li>
+            <li>每日发卡有上限，防止刷低价值任务。</li>
+            <li>训练模块必须把恢复、降级、疼痛停止视为有效安全行为。</li>
+            <li>如果激励导致用户过度训练或焦虑，应允许关闭或降低激励强度。</li>
+            <li>盲盒规则必须可解释，不能隐藏关键条件。</li>
+            <li>奖励系统不能覆盖模块安全规则，例如不能为了卡片绕过训练安全规则。</li>
+          </ul>
+        </section>
+
+        <section id="mvp" class="doc-section" data-status="active" data-module="mvp">
+          <div class="section-head">
+            <h2>14. MVP 范围</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">MVP</span></div>
+          </div>
+          <div class="grid-2">
+            <div class="mini-card">
+              <strong>MVP 包含</strong>
+              <ul>
+                <li>一个心愿清单。</li>
+                <li>基础卡、恢复卡、里程碑卡三类卡片。</li>
+                <li>训练模块打卡事件接入。</li>
+                <li>小盲盒和标准盲盒。</li>
+                <li>抽中心愿后的确认、推迟、转进度。</li>
+                <li>基础预算保护、心愿基金、预支申请和每日发卡上限。</li>
+              </ul>
+            </div>
+            <div class="mini-card">
+              <strong>MVP 不包含</strong>
+              <ul>
+                <li>多人排行榜。</li>
+                <li>付费抽卡。</li>
+                <li>复杂卡牌交易。</li>
+                <li>外部商家奖品。</li>
+                <li>自动购买或支付。</li>
+                <li>完整记账系统。</li>
+                <li>真实借贷、信用卡接口或金融账户同步。</li>
+                <li>复杂概率运营系统。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="acceptance" class="doc-section" data-status="active" data-module="acceptance">
+          <div class="section-head">
+            <h2>15. 验收标准</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">acceptance</span></div>
+          </div>
+          <ol>
+            <li>用户可以创建心愿清单，并为心愿设置类型、成本、优先级、等级和预算状态。</li>
+            <li>训练模块完成有效打卡后，激励系统能生成对应 RewardEvent 并发放卡片。</li>
+            <li>恢复、降级、合理跳过能获得安全导向的卡片或调整卡。</li>
+            <li>用户能查看卡册和盲盒进度。</li>
+            <li>达到条件后，用户能开启盲盒并从合格心愿池中获得结果。</li>
+            <li>大额心愿不会自动兑换，必须经过预算确认。</li>
+            <li>预算不足时，系统能提供推迟、转心愿基金或申请预支选项。</li>
+            <li>申请预支时，系统能展示未来预算影响和偿还计划。</li>
+            <li>安全储备不足或已有未还预支时，系统能阻止新的高风险预支。</li>
+            <li>用户可以选择兑换、推迟、转为进度或放弃。</li>
+            <li>每日发卡上限生效，不能无限刷卡。</li>
+            <li>系统明确展示盲盒规则摘要和安全边界。</li>
+            <li>用户可以关闭或降低激励系统强度。</li>
+          </ol>
+        </section>
+
+        <section id="open-questions" class="doc-section" data-status="draft" data-module="questions">
+          <div class="section-head">
+            <h2>16. 未决问题</h2>
+            <div class="tags"><span class="tag warn">draft</span><span class="tag">questions</span></div>
+          </div>
+          <ul>
+            <li>卡片是否需要视觉插图，是否用 image2 生成卡面。</li>
+            <li>第一版盲盒是随机抽取，还是采用伪随机 + 保底机制。</li>
+            <li>预支上限应该按月自由支配预算的固定比例，还是用户自定义。</li>
+            <li>卡片消耗后是否仍保留在收藏卡册中。</li>
+            <li>不同模块产出的卡片是否可以通用兑换，还是需要模块限定。</li>
+            <li>是否需要“心愿基金”概念来累积大额奖励进度。</li>
+            <li>财务系统第一版是否只做手动预算录入，不接入任何银行或支付平台。</li>
+          </ul>
+        </section>
+
+        <footer>
+          <p>维护规则：涉及愿望清单、集卡、盲盒、奖励兑换、卡片发放或跨模块激励时，必须同步更新本文档。</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

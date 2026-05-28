@@ -375,14 +375,17 @@
           <a href="#image2-flow">13. image2 生成链路</a>
           <a href="#image2-security">14. image2 安全规则</a>
           <a href="#prompt-rules">15. Prompt 生成原则</a>
-          <a href="#ui-direction">16. 页面设计方向</a>
-          <a href="#pages">17. 关键页面</a>
-          <a href="#safety-rules">18. 安全规则</a>
-          <a href="#out-of-scope">19. 暂不实现范围</a>
-          <a href="#technical-direction">20. 技术方向初稿</a>
-          <a href="#priority">21. 开发优先级</a>
-          <a href="#decision-filter">22. 功能判断标准</a>
-          <a href="#one-line-summary">23. 当前一句话总结</a>
+          <a href="#checkins">16. 打卡机制</a>
+          <a href="#reward-system">17. 愿望激励系统</a>
+          <a href="#finance-system">18. Core 财务模块</a>
+          <a href="#ui-direction">19. 页面设计方向</a>
+          <a href="#pages">20. 关键页面</a>
+          <a href="#safety-rules">21. 安全规则</a>
+          <a href="#out-of-scope">22. 暂不实现范围</a>
+          <a href="#technical-direction">23. 技术方向初稿</a>
+          <a href="#priority">24. 开发优先级</a>
+          <a href="#decision-filter">25. 功能判断标准</a>
+          <a href="#one-line-summary">26. 当前一句话总结</a>
         </nav>
       </aside>
 
@@ -400,12 +403,12 @@
               <span>权威记忆</span>
             </div>
             <div class="meta-item">
-              <strong>当前模块</strong>
-              <span>运动训练与饮食一体化</span>
+              <strong>当前范围</strong>
+              <span>V1 闭环：训练饮食 + 激励 + 财务</span>
             </div>
             <div class="meta-item">
               <strong>开发阶段</strong>
-              <span>MVP 前需求固化</span>
+              <span>V1 MVP 需求交付</span>
             </div>
             <div class="meta-item">
               <strong>更新原则</strong>
@@ -421,8 +424,8 @@
           </div>
           <p>AiLifeOS 不是单一健身 App，而是一个面向个人长期目标的生活操作系统。</p>
           <pre><code>围绕个人目标，持续完成规划、执行、记录、复盘、调整和记忆沉淀的本地优先生活操作系统。</code></pre>
-          <p>当前阶段只落地第一个真实模块：运动训练与饮食一体化模块。</p>
-          <p>该模块服务的目标是：用户刚开通半年健身卡，是健身小白，平时打羽毛球和网球，希望通过训练计划、动作教学、饮食安排和复盘，让羽毛球、网球和整体运动能力持续提升。</p>
+          <p>当前 V1 以运动训练与饮食一体化为首个业务场景，同时接入打卡、愿望激励、Core 财务和手动开销，跑通第一个完整闭环。</p>
+          <p>V1 服务的目标是：用户刚开通半年健身卡，是健身小白，平时打羽毛球和网球，希望通过训练计划、动作教学、饮食安排、打卡复盘、心愿激励和预算守护，让羽毛球、网球和整体生活执行能力持续提升。</p>
         </section>
 
         <section id="loop" class="doc-section" data-module="core" data-status="active">
@@ -444,7 +447,7 @@
   -> 根据日程、身体状态、球类活动生成今日训练和饮食计划
   -> 用户查看动作图文教学
   -> 没有动作图时按需调用 image2 生成并保存为静态资源
-  -> 用户完成训练和饮食记录
+  -> 用户完成训练、拉伸和饮食记录
   -> 系统根据疲劳、疼痛、完成情况和球类表现调整后续计划</code></pre>
         </section>
 
@@ -453,8 +456,9 @@
             <h2>3. 当前模块边界</h2>
             <div class="tags"><span class="tag active">active</span><span class="tag">boundary</span></div>
           </div>
-          <p>当前模块名称：<strong>运动训练与饮食一体化模块</strong>。</p>
-          <p>它不是完整 AiLifeOS 的全部，只是第一个模块。后续可能加入学习、工作、财务、知识库、习惯、项目管理等模块，但当前不要提前实现。</p>
+          <p>当前 V1 名称：<strong>运动训练与饮食一体化 + 愿望激励 + Core 财务闭环</strong>。</p>
+          <p>它不是完整 AiLifeOS 的全部，只是第一个可用版本。后续可能加入学习、工作、知识库、习惯、项目管理等模块，但 V1 只实现训练饮食、打卡、激励和财务预算守护。</p>
+          <p>V1 总控交付文档见 <a href="requirements/v1-mvp-master-plan.html">docs/requirements/v1-mvp-master-plan.html</a>。后续编码前应先读该文档，再读具体模块 PRD。</p>
           <table>
             <thead>
               <tr><th>核心对象</th><th>当前模块中的作用</th></tr>
@@ -638,6 +642,10 @@
   |   |- 动作、组数、次数、休息
   |   |- 新手重量建议
   |   `- 风险提示
+  |- 训练后拉伸
+  |   |- 肩颈/胸椎/髋/腿部等拉伸动作
+  |   |- 每个动作时长
+  |   |- 停止信号
   `- 饮食安排
       |- 早餐
       |- 午餐
@@ -650,6 +658,7 @@
             <li>如果今天不练，取消训练前后补给，改成普通日饮食。</li>
             <li>如果临时增加网球课，增加训练前碳水和补水提醒。</li>
             <li>如果今天是下肢训练，保证碳水和蛋白质。</li>
+            <li>训练后必须有 5-10 分钟拉伸或放松任务，按今日训练和球类活动选择部位。</li>
             <li>如果今天是恢复日，保持蛋白质，碳水适中，避免暴食。</li>
           </ul>
           <p>第一版不做精确卡路里和食物数据库，优先使用小白友好的结构化餐次建议。</p>
@@ -710,7 +719,7 @@
   -> 检查本地是否已有该动作图片
   -> 有：直接展示静态图片
   -> 没有：根据结构化动作数据生成 image2 prompt
-  -> 本地服务或 Node 脚本调用中转站 image2
+  -> Go 本地服务调用中转站 image2
   -> 保存图片到 public/exercise-images/
   -> 更新图片 manifest
   -> 页面展示图片
@@ -749,7 +758,7 @@
             <li>API key 不能提交到 GitHub。</li>
             <li>API key 放在 <code>.env.local</code> 或本地私有配置中。</li>
             <li>前端不能直接调用 image2。</li>
-            <li>调用 image2 应通过本地 Node 脚本或本地后端服务完成。</li>
+            <li>调用 image2 应通过本地 Go 后端服务完成；临时验证脚本也优先使用 Go。</li>
             <li>生成图片后保存到项目静态目录，App 运行时只读静态图片。</li>
           </ul>
           <p>需要验证的中转站信息：base URL、模型名是否为 <code>image2</code>、图片生成接口路径、返回格式是 <code>base64</code> 还是 <code>url</code>、支持的尺寸和参数。</p>
@@ -784,9 +793,88 @@
           </ul>
         </section>
 
+        <section id="checkins" class="doc-section" data-module="logs" data-status="active">
+          <div class="section-head">
+            <h2>16. 打卡机制</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">check-in</span></div>
+          </div>
+          <p>打卡机制是记录系统的低摩擦入口，不是为了制造连续天数压力。它用于让系统获得足够上下文，支持今日计划、计划重排、训练饮食联动和周复盘。</p>
+          <table>
+            <thead>
+              <tr><th>打卡类型</th><th>作用</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>今日状态打卡</td><td>记录睡眠、疲劳、酸痛、疼痛、可用时间和今日球类安排。</td></tr>
+              <tr><td>训练完成打卡</td><td>记录完成度、RPE、疼痛、重量/次数摘要和备注。</td></tr>
+              <tr><td>饮食执行打卡</td><td>按餐次轻量记录蛋白质、碳水、蔬菜、饮水和训练补给。</td></tr>
+              <tr><td>球类活动打卡</td><td>记录羽毛球/网球时长、强度、表现感受和疼痛。</td></tr>
+              <tr><td>计划变化打卡</td><td>记录跳过、改期、缩短、替换训练的原因。</td></tr>
+              <tr><td>疼痛打卡</td><td>记录疼痛部位、程度、类型、触发动作和是否停止。</td></tr>
+            </tbody>
+          </table>
+          <ul>
+            <li>状态打卡应能在 30 秒内完成。</li>
+            <li>跳过训练也算有效打卡，需要记录原因。</li>
+            <li>连续漏打卡不惩罚用户，只在复盘中提示数据不足。</li>
+            <li>疼痛打卡优先级高于完成率，出现关节痛时触发安全规则。</li>
+            <li>不做社交排名，不做强刺激连续打卡焦虑设计。</li>
+          </ul>
+        </section>
+
+        <section id="reward-system" class="doc-section" data-module="rewards" data-status="draft">
+          <div class="section-head">
+            <h2>17. 愿望激励系统</h2>
+            <div class="tags"><span class="tag warn">draft</span><span class="tag">cross-module</span></div>
+          </div>
+          <p>AiLifeOS 后续需要一套跨模块激励系统，把训练、学习、健康、工作等模块的有效打卡转化为卡片，再通过集卡和盲盒连接用户自己的心愿清单。</p>
+          <pre><code>有效打卡
+  -> 获得卡片
+  -> 集齐卡片
+  -> 开启盲盒
+  -> 命中心愿清单奖励
+  -> 用户确认预算和时机
+  -> 兑换或推迟</code></pre>
+          <ul>
+            <li>训练、学习等模块只产出有效打卡、目标进度和里程碑事件。</li>
+            <li>激励系统统一负责发卡、集卡、盲盒、心愿清单和兑换规则。</li>
+            <li>卡片只能通过真实行动获得，不能付费购买。</li>
+            <li>盲盒奖项来自用户自己的心愿清单，不做外部商业抽奖。</li>
+            <li>大额心愿需要接入 Core 财务模块做预算确认，不自动触发消费。</li>
+            <li>预算不足时可以推迟、转为心愿基金进度，或在安全规则内申请预支。</li>
+            <li>恢复、降级、合理跳过也可以算有效行为，避免为了集卡而过度训练。</li>
+          </ul>
+          <p>详细需求见 <a href="requirements/reward-wishlist-system-prd.html">docs/requirements/reward-wishlist-system-prd.html</a>。</p>
+        </section>
+
+        <section id="finance-system" class="doc-section" data-module="finance" data-status="draft">
+          <div class="section-head">
+            <h2>18. Core 财务模块</h2>
+            <div class="tags"><span class="tag warn">draft</span><span class="tag">core/finance</span></div>
+          </div>
+          <p>AiLifeOS 需要一套独立的 Core 财务模块，统一管理预算状态、心愿基金、预支、开销记录和兑换风险。它不是愿望激励系统的附属功能，而是所有涉及花钱决策的模块都要调用的基础能力。</p>
+          <p>第一阶段不做完整记账 App，不接银行、不接支付平台，优先服务手动开销记录、心愿兑换、预算判断、预支判断和消费复盘。</p>
+          <pre><code>抽中心愿
+  -> 财务系统检查预算
+  -> 预算够：允许确认兑换
+  -> 预算不够：推迟 / 转为心愿基金 / 申请预支
+  -> 预支通过：生成偿还计划和冷却期
+  -> 预支不通过：保留心愿进度</code></pre>
+          <ul>
+            <li>记录月度可自由支配预算、必要支出、安全储备和心愿基金。</li>
+            <li>第一版开销由用户手动添加，记录金额、分类、来源、时间和关联目标。</li>
+            <li>大额心愿兑换前必须做预算检查。</li>
+            <li>学习课程、训练装备、旅行计划、订阅工具等未来模块支出，也应通过同一套预算检查。</li>
+            <li>长期可以接入美团、淘宝、支付宝、银行和信用卡账单，但必须作为只读导入，不自动支付、不自动借贷。</li>
+            <li>预支不是额外收入，而是占用未来预算，必须生成偿还计划。</li>
+            <li>预支需要上限、冷却期和风险提示。</li>
+            <li>财务系统不替代专业财务建议，不自动消费、不自动借贷。</li>
+          </ul>
+          <p>详细需求见 <a href="requirements/finance-budget-system-prd.html">docs/requirements/finance-budget-system-prd.html</a>。</p>
+        </section>
+
         <section id="ui-direction" class="doc-section" data-module="ui" data-status="active">
           <div class="section-head">
-            <h2>16. 页面设计方向</h2>
+            <h2>19. 页面设计方向</h2>
             <div class="tags"><span class="tag active">active</span><span class="tag">ui</span></div>
           </div>
           <p>AiLifeOS 的界面要像个人生活操作系统，不像普通后台，也不像花哨健身 App。</p>
@@ -823,7 +911,7 @@
 
         <section id="pages" class="doc-section" data-module="ui" data-status="active">
           <div class="section-head">
-            <h2>17. 关键页面</h2>
+            <h2>20. 关键页面</h2>
             <div class="tags"><span class="tag active">active</span><span class="tag">pages</span></div>
           </div>
           <table>
@@ -831,15 +919,16 @@
               <tr><th>页面</th><th>作用</th></tr>
             </thead>
             <tbody>
-              <tr><td>今日页</td><td>打开后直接看到今日训练、饮食、状态、风险和快捷操作</td></tr>
+              <tr><td>今日页</td><td>打开后直接看到今日训练、训练后拉伸、饮食、状态打卡、风险和快捷操作</td></tr>
               <tr><td>训练页</td><td>展示本周训练任务池、今日训练和可替换训练</td></tr>
               <tr><td>动作详情页</td><td>展示图文教学、错误提示、停止信号和替代动作</td></tr>
               <tr><td>饮食页</td><td>展示与今日训练联动的餐次安排和饮食记录</td></tr>
               <tr><td>日程页</td><td>展示固定球局、临时课程、训练安排和冲突提醒</td></tr>
-              <tr><td>记录页</td><td>查看训练、饮食、疲劳、疼痛、球类活动时间线</td></tr>
+              <tr><td>记录页</td><td>查看训练、饮食、疲劳、疼痛、球类活动和打卡时间线</td></tr>
               <tr><td>统计页</td><td>展示完成率、训练负荷、疲劳趋势、疼痛次数、球类频率</td></tr>
               <tr><td>资源页</td><td>管理 image2 生成图片、prompt、状态和重生成</td></tr>
               <tr><td>个人档案页</td><td>配置身体信息、运动背景、伤病、目标和偏好</td></tr>
+              <tr><td>财务页</td><td>查看预算、心愿基金、预支记录和兑换风险</td></tr>
             </tbody>
           </table>
           <p>今日页是最重要入口。今日页需要回答：今天该不该练、今天练什么、今天怎么吃、为什么这么安排、有没有风险、如果计划变了怎么调整。</p>
@@ -847,7 +936,7 @@
 
         <section id="safety-rules" class="doc-section" data-module="rules" data-status="active">
           <div class="section-head">
-            <h2>18. 安全规则</h2>
+            <h2>21. 安全规则</h2>
             <div class="tags"><span class="tag active">active</span><span class="tag safe">safety</span></div>
           </div>
           <p>运动训练涉及身体风险，安全层必须明确。</p>
@@ -865,7 +954,7 @@
 
         <section id="out-of-scope" class="doc-section" data-module="scope" data-status="active">
           <div class="section-head">
-            <h2>19. 暂不实现范围</h2>
+            <h2>22. 暂不实现范围</h2>
             <div class="tags"><span class="tag warn">defer</span><span class="tag">YAGNI</span></div>
           </div>
           <p>当前阶段明确不做：</p>
@@ -888,39 +977,68 @@
 
         <section id="technical-direction" class="doc-section" data-module="engineering" data-status="draft">
           <div class="section-head">
-            <h2>20. 技术方向初稿</h2>
+            <h2>23. 技术方向初稿</h2>
             <div class="tags"><span class="tag warn">draft</span><span class="tag">architecture</span></div>
           </div>
-          <p>后续开发可以按以下思路组织，但不要求一次性全部实现：</p>
-          <pre><code>src/
-  core/
-    profile/
-    goals/
-    schedule/
-    tasks/
-    logs/
-    assets/
-    reviews/
-    rules/
+          <p>后续开发可以按以下思路组织，但不要求一次性全部实现。项目采用 monorepo、单仓库、双进程架构：V1 前端固定使用 React + TypeScript + Vite，Go 本地服务集成在同一个仓库中，本地运行时分别启动。</p>
+          <pre><code>apps/
+  web/
+    src/
+      core/
+        profile/
+        goals/
+        schedule/
+        tasks/
+        logs/
+        assets/
+        reviews/
+        rules/
+        rewards/
+        finance/
+      modules/
+        training/
+      pages/
+      shared/
 
-  modules/
-    training/
-      exercises/
-      plans/
-      sessions/
-      nutrition/
-      reviews/
-      components/
+  server-go/
+    cmd/
+      ailifeos/
+    internal/
+      image2/
+      assets/
+      config/
+    storage/
+      exercise-images/
 
-  data/
-    seed/</code></pre>
+packages/
+  schemas/
+  fixtures/
+  docs-shared/</code></pre>
+          <p>前后端分工：</p>
+          <pre><code>React/Vite 前端
+  -> 页面、交互、IndexedDB/Dexie 本地业务数据
+  -> 通过 /api 和 /assets 访问 Go 服务
+
+Go 本地服务
+  -> image2 代理
+  -> 图片落盘到 apps/server-go/storage/exercise-images/
+  -> 暴露 /assets/exercise-images/ 静态访问
+  -> 后续账单导入和本地 API</code></pre>
+          <p>模块故障隔离原则：</p>
+          <ul>
+            <li>模块之间通过 service contract 协作，不能跨模块直接读写内部状态。</li>
+            <li>Core 财务异常时，训练、打卡、动作详情和本地记录仍应可用。</li>
+            <li>image2 或 Go 服务不可用时，动作详情仍展示文字教学和 prompt，图片生成进入待重试状态。</li>
+            <li>愿望激励异常时，训练和打卡不受影响，RewardEvent 可以进入待处理队列。</li>
+            <li>页面必须做局部降级，不因为单个模块错误导致整个 App 不可用。</li>
+          </ul>
           <p>静态资源建议：</p>
           <pre><code>public/
   exercise-images/</code></pre>
           <p>本地脚本建议：</p>
           <pre><code>scripts/
-  test-image2.ts
-  generate-exercise-image.ts</code></pre>
+  test-image2.go
+  generate-exercise-image.go</code></pre>
           <p>环境变量建议：</p>
           <pre><code>IMAGE_API_BASE_URL=
 IMAGE_API_KEY=
@@ -930,25 +1048,28 @@ IMAGE_MODEL=image2</code></pre>
 
         <section id="priority" class="doc-section" data-module="delivery" data-status="active">
           <div class="section-head">
-            <h2>21. 开发优先级</h2>
+            <h2>24. 开发优先级</h2>
             <div class="tags"><span class="tag active">active</span><span class="tag">MVP</span></div>
           </div>
           <ol>
             <li>产品框架和今日页。</li>
             <li>个人档案和半年目标。</li>
             <li>灵活本周任务池。</li>
-            <li>今日训练和饮食一体化计划。</li>
+            <li>今日训练、训练后拉伸和饮食一体化计划。</li>
+            <li>今日状态、训练完成、饮食执行和计划变化打卡。</li>
             <li>动作详情页和结构化动作库。</li>
             <li>image2 prompt 生成和本地保存链路。</li>
             <li>训练、饮食、疲劳、疼痛记录。</li>
             <li>每周复盘和下周调整建议。</li>
             <li>资源页管理生成图片和重生成状态。</li>
+            <li>V1 接入跨模块愿望清单、集卡和盲盒激励系统。</li>
+            <li>V1 接入 Core 财务模块，为心愿兑换和跨模块付费决策提供预算检查、手动开销和预支管理。</li>
           </ol>
         </section>
 
         <section id="decision-filter" class="doc-section" data-module="delivery" data-status="active">
           <div class="section-head">
-            <h2>22. 判断一个功能是否应该做</h2>
+            <h2>25. 判断一个功能是否应该做</h2>
             <div class="tags"><span class="tag active">active</span><span class="tag">KISS</span><span class="tag">YAGNI</span></div>
           </div>
           <p>新增功能前先问：</p>
@@ -964,10 +1085,10 @@ IMAGE_MODEL=image2</code></pre>
 
         <section id="one-line-summary" class="doc-section" data-module="summary" data-status="active">
           <div class="section-head">
-            <h2>23. 当前一句话总结</h2>
+            <h2>26. 当前一句话总结</h2>
             <div class="tags"><span class="tag active">active</span><span class="tag">summary</span></div>
           </div>
-          <pre><code>AiLifeOS 当前先做运动训练与饮食一体化模块：它根据用户的半年运动目标、固定球局、临时安排、身体状态和训练记录，动态生成今日训练与饮食计划；用户点击动作时按需调用 image2 生成图文教学并保存为 GitHub 静态资源；训练和饮食执行后进入记录与复盘，持续调整后续计划。</code></pre>
+          <pre><code>AiLifeOS V1 当前先做第一个完整闭环：以运动训练与饮食一体化为首个业务场景，根据半年运动目标、固定球局、临时安排、身体状态打卡和训练记录动态生成今日训练、训练后拉伸与饮食计划；动作图按需调用 image2 生成并保存为静态资源；训练、拉伸、饮食、球类、疼痛和计划变化通过低摩擦打卡进入记录与复盘；有效打卡进入愿望激励系统；心愿兑换必须经过 Core 财务预算检查，并支持手动开销记录、心愿基金和受控预支。</code></pre>
         </section>
 
         <footer>

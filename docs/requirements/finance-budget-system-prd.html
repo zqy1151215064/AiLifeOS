@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Core 财务与预算模块 PRD</title>
+    <meta
+      name="description"
+      content="AiLifeOS Core 财务模块：预算、心愿基金、预支、偿还计划、消费记录和跨模块预算保护。"
+    >
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f8;
+        --panel: #ffffff;
+        --panel-soft: #fafafa;
+        --text: #1f2328;
+        --muted: #606a75;
+        --border: #d8dee4;
+        --accent: #2563eb;
+        --accent-soft: #eff6ff;
+        --success: #15803d;
+        --warning: #b45309;
+        --danger: #b91c1c;
+        --code: #f1f5f9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Microsoft YaHei",
+          sans-serif;
+        line-height: 1.65;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      aside {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        border-right: 1px solid var(--border);
+        background: var(--panel);
+        padding: 24px 18px;
+      }
+
+      main {
+        width: 100%;
+        max-width: 1120px;
+        padding: 40px 48px 80px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.25;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      h2 {
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+
+      h3 {
+        font-size: 18px;
+        margin: 22px 0 10px;
+      }
+
+      p {
+        margin: 10px 0;
+      }
+
+      ul,
+      ol {
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 10px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--panel-soft);
+        font-weight: 650;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      code,
+      pre {
+        font-family:
+          "SFMono-Regular",
+          Consolas,
+          "Liberation Mono",
+          monospace;
+      }
+
+      code {
+        background: var(--code);
+        border-radius: 4px;
+        padding: 2px 5px;
+      }
+
+      pre {
+        overflow: auto;
+        margin: 14px 0;
+        padding: 14px 16px;
+        background: var(--code);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        line-height: 1.55;
+      }
+
+      .eyebrow {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 650;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .summary {
+        max-width: 860px;
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .nav-title {
+        margin-bottom: 14px;
+        font-size: 18px;
+        font-weight: 750;
+      }
+
+      .nav-note {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 18px;
+      }
+
+      nav a {
+        display: block;
+        border-radius: 6px;
+        padding: 6px 8px;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      nav a:hover {
+        background: var(--accent-soft);
+        text-decoration: none;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .meta-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 12px;
+      }
+
+      .meta-item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+
+      .meta-item span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .doc-section {
+        margin-top: 28px;
+        padding: 24px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: flex-end;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 2px 8px;
+        background: var(--panel-soft);
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .tag.active {
+        border-color: #bfdbfe;
+        background: var(--accent-soft);
+        color: #1d4ed8;
+      }
+
+      .tag.safe {
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+        color: var(--success);
+      }
+
+      .tag.warn {
+        border-color: #fed7aa;
+        background: #fff7ed;
+        color: var(--warning);
+      }
+
+      .tag.danger {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: var(--danger);
+      }
+
+      .callout {
+        margin: 14px 0;
+        padding: 12px 14px;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        background: var(--accent-soft);
+      }
+
+      .callout strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .mini-card {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        background: var(--panel-soft);
+      }
+
+      .mini-card strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      footer {
+        margin-top: 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 920px) {
+        .layout {
+          display: block;
+        }
+
+        aside {
+          position: static;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        main {
+          padding: 28px 18px 56px;
+        }
+
+        .meta-grid,
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          display: block;
+        }
+
+        .tags {
+          justify-content: flex-start;
+          margin-top: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside aria-label="文档目录">
+        <div class="nav-title">Core 财务 PRD</div>
+        <div class="nav-note">预算、开销、心愿基金、预支和兑换保护。</div>
+        <nav>
+          <a href="#positioning">1. 定位</a>
+          <a href="#principles">2. 设计原则</a>
+          <a href="#scope">3. MVP 范围</a>
+          <a href="#budget-model">4. 预算模型</a>
+          <a href="#wish-fund">5. 心愿基金</a>
+          <a href="#advance">6. 预支机制</a>
+          <a href="#budget-check">7. 预算检查</a>
+          <a href="#expense-records">8. 开销记录与账单接入</a>
+          <a href="#pages">9. 页面需求</a>
+          <a href="#data">10. 数据对象</a>
+          <a href="#rules">11. 风控规则</a>
+          <a href="#acceptance">12. 验收标准</a>
+          <a href="#open-questions">13. 未决问题</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header>
+          <div class="eyebrow">Product Requirements Document</div>
+          <h1>Core 财务与预算模块 PRD</h1>
+          <p class="summary">
+            本文档定义 AiLifeOS 的 Core 财务模块。第一阶段不做完整记账 App，不接入银行和支付平台，重点服务手动开销记录、心愿兑换、预算判断、预支管理、心愿基金和跨模块财务状态。
+          </p>
+
+          <div class="meta-grid" aria-label="文档元信息">
+            <div class="meta-item">
+              <strong>所属项目</strong>
+              <span>AiLifeOS</span>
+            </div>
+            <div class="meta-item">
+              <strong>模块类型</strong>
+              <span>Core 财务模块</span>
+            </div>
+            <div class="meta-item">
+              <strong>文档状态</strong>
+              <span>MVP 需求基线</span>
+            </div>
+            <div class="meta-item">
+              <strong>关键边界</strong>
+              <span>不自动消费，不自动借贷</span>
+            </div>
+          </div>
+        </header>
+
+        <section id="positioning" class="doc-section" data-status="active" data-module="finance">
+          <div class="section-head">
+            <h2>1. 定位</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">core</span></div>
+          </div>
+          <p>财务系统是 AiLifeOS 的 Core 模块，模块路径建议为 <code>core/finance</code>。它不属于愿望激励系统，也不属于训练、学习、旅行等业务模块，而是所有涉及花钱、储蓄、预算、预支和消费复盘的模块共享的基础能力。</p>
+          <p>它的目标不是替代专业记账软件，而是在用户想兑换心愿、购买课程、购买装备、安排旅行或支付订阅时回答：钱花到哪里了，现在能不能买，需不需要攒，能不能预支，预支后未来怎么还。</p>
+          <h3>Core 职责边界</h3>
+          <ul>
+            <li>维护用户手动录入的财务状态。</li>
+            <li>维护预算周期、奖励预算、安全储备和心愿基金。</li>
+            <li>为其他模块提供预算检查结果，而不是让业务模块各自判断。</li>
+            <li>记录与目标、心愿和模块关联的开销、消费或兑换结果。</li>
+            <li>生成受控预支方案、偿还计划和冷却期。</li>
+            <li>不直接决定训练计划、学习计划或奖励发放，只提供财务约束。</li>
+          </ul>
+        </section>
+
+        <section id="principles" class="doc-section" data-status="active" data-module="principles">
+          <div class="section-head">
+            <h2>2. 设计原则</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag safe">guardrails</span></div>
+          </div>
+          <ul>
+            <li>保护预算优先于奖励兑现。</li>
+            <li>财务系统只做辅助决策，不提供专业投资、借贷或理财建议。</li>
+            <li>不接入真实借贷，不自动消费，不自动扣款。</li>
+            <li>预支不是额外收入，而是未来预算的提前占用。</li>
+            <li>必要支出、安全储备和已有预支优先级高于心愿兑换。</li>
+            <li>用户必须能看懂预算判断原因。</li>
+          </ul>
+        </section>
+
+        <section id="scope" class="doc-section" data-status="active" data-module="scope">
+          <div class="section-head">
+            <h2>3. MVP 范围</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">MVP</span></div>
+          </div>
+          <div class="grid-2">
+            <div class="mini-card">
+              <strong>MVP 包含</strong>
+              <ul>
+                <li>手动录入月度收入、固定支出和可自由支配预算。</li>
+                <li>安全储备状态。</li>
+                <li>心愿基金。</li>
+                <li>兑换前预算检查。</li>
+                <li>预支申请、预支上限和偿还计划。</li>
+                <li>手动开销、消费和兑换记录。</li>
+                <li>面向其他模块的预算检查结果。</li>
+              </ul>
+            </div>
+            <div class="mini-card">
+              <strong>MVP 不包含</strong>
+              <ul>
+                <li>银行账户同步。</li>
+                <li>支付平台接入。</li>
+                <li>信用卡账单自动识别。</li>
+                <li>美团、淘宝、支付宝、银行等外部账单自动接入。</li>
+                <li>投资组合管理。</li>
+                <li>贷款申请或真实借贷。</li>
+                <li>复杂会计分类。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="budget-model" class="doc-section" data-status="active" data-module="budget">
+          <div class="section-head">
+            <h2>4. 预算模型</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">budget</span></div>
+          </div>
+          <pre><code>月度收入
+  - 固定必要支出
+  - 储蓄/安全储备
+  - 已有预支偿还
+  = 可自由支配预算
+
+可自由支配预算
+  - 已计划消费
+  - 心愿基金存入
+  = 当前可用奖励预算</code></pre>
+          <table>
+            <thead>
+              <tr><th>预算项</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>月度收入</td><td>用户手动录入的周期收入。</td></tr>
+              <tr><td>固定必要支出</td><td>房租、通勤、基础餐饮、账单等不可轻易挪用支出。</td></tr>
+              <tr><td>安全储备</td><td>用户希望保留的底线资金或紧急备用金。</td></tr>
+              <tr><td>可自由支配预算</td><td>可以用于娱乐、体验、心愿和弹性消费的预算。</td></tr>
+              <tr><td>奖励预算</td><td>可用于心愿兑换的预算，不等于全部自由支配预算。</td></tr>
+              <tr><td>预支占用</td><td>已提前使用的未来奖励预算。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="wish-fund" class="doc-section" data-status="active" data-module="wish-fund">
+          <div class="section-head">
+            <h2>5. 心愿基金</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">wishlist</span></div>
+          </div>
+          <p>心愿基金用于大额或长期心愿。盲盒抽中大额心愿时，可以不立即兑换，而是把本次奖励转化为心愿基金进度。</p>
+          <ul>
+            <li>每个心愿可以有独立基金目标。</li>
+            <li>用户可以手动存入心愿基金。</li>
+            <li>盲盒结果可以增加心愿基金进度。</li>
+            <li>基金未满时默认不建议直接兑换大额心愿。</li>
+            <li>用户可暂停、调整或归档心愿基金。</li>
+          </ul>
+        </section>
+
+        <section id="advance" class="doc-section" data-status="active" data-module="advance">
+          <div class="section-head">
+            <h2>6. 预支机制</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag danger">controlled</span></div>
+          </div>
+          <p>预支允许用户在预算不足时提前使用未来的可自由支配预算，但必须受控。预支不代表系统鼓励消费，更不是借贷功能。</p>
+          <pre><code>申请预支
+  -> 检查安全储备
+  -> 检查本月必要支出
+  -> 检查已有预支
+  -> 计算未来预算影响
+  -> 生成偿还计划
+  -> 用户确认
+  -> 进入冷却期</code></pre>
+          <table>
+            <thead>
+              <tr><th>规则</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>预支上限</td><td>不能超过未来若干周期可自由支配预算的一定比例。</td></tr>
+              <tr><td>偿还计划</td><td>预支后自动减少未来周期的奖励预算。</td></tr>
+              <tr><td>冷却期</td><td>预支后一定时间内不能再次预支或开启高价值盲盒。</td></tr>
+              <tr><td>安全储备保护</td><td>安全储备不足时禁止预支。</td></tr>
+              <tr><td>未还预支保护</td><td>已有未还预支时限制新的预支。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="budget-check" class="doc-section" data-status="active" data-module="check">
+          <div class="section-head">
+            <h2>7. 预算检查</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">decision</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>检查结果</th><th>系统建议</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>可兑换</td><td>预算充足，允许用户确认兑换。</td></tr>
+              <tr><td>谨慎兑换</td><td>预算接近上限，建议推迟或部分转基金。</td></tr>
+              <tr><td>建议推迟</td><td>预算不足，推荐转为心愿基金或下周期再兑换。</td></tr>
+              <tr><td>可申请预支</td><td>预算不足但安全储备充足，可展示预支方案。</td></tr>
+              <tr><td>禁止预支</td><td>安全储备不足、必要支出受影响或已有未还预支。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="expense-records" class="doc-section" data-status="active" data-module="expense">
+          <div class="section-head">
+            <h2>8. 开销记录与账单接入</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">expense</span></div>
+          </div>
+          <p>开销记录是 Core 财务模块的一等能力。第一版先做用户手动添加，保证预算、心愿基金、预支和复盘有真实数据输入。</p>
+          <table>
+            <thead>
+              <tr><th>阶段</th><th>能力</th><th>边界</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>MVP</td><td>手动添加开销，支持金额、分类、时间、支付方式、来源、备注、关联心愿或目标。</td><td>不接外部账户，不自动同步。</td></tr>
+              <tr><td>后续</td><td>支持 CSV、截图识别或账单文件导入，用于支付宝、微信、银行卡、信用卡等账单。</td><td>导入后必须允许用户审核、修改和忽略。</td></tr>
+              <tr><td>长期</td><td>在条件允许时接入美团、淘宝、支付宝、银行等官方或可信账单来源。</td><td>只读导入，不保存明文敏感凭证，不自动支付。</td></tr>
+            </tbody>
+          </table>
+          <ul>
+            <li>第一版开销必须支持手动新增、编辑、删除和分类。</li>
+            <li>开销可以关联心愿、训练装备、学习课程、旅行计划或其他模块目标。</li>
+            <li>外部账单接入必须是后续能力，不能阻塞 MVP。</li>
+            <li>所有外部账单记录都要保留 source、sourceRecordId、importBatchId 和用户确认状态。</li>
+            <li>外部来源的数据只能辅助预算判断，用户可以手动修正最终分类和金额。</li>
+          </ul>
+        </section>
+
+        <section id="pages" class="doc-section" data-status="active" data-module="ui">
+          <div class="section-head">
+            <h2>9. 页面需求</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">UI</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>页面</th><th>作用</th><th>关键内容</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>财务概览</td><td>查看预算健康度。</td><td>收入、固定支出、可自由支配预算、安全储备、预支状态。</td></tr>
+              <tr><td>预算设置</td><td>手动维护预算模型。</td><td>月收入、必要支出、安全储备目标、奖励预算比例。</td></tr>
+              <tr><td>心愿基金</td><td>查看大额心愿储蓄进度。</td><td>心愿、目标金额、已存金额、进度、预计完成时间。</td></tr>
+              <tr><td>预算检查页</td><td>兑换心愿前做判断。</td><td>预算结果、原因、风险、可选操作。</td></tr>
+              <tr><td>预支确认页</td><td>展示预支影响。</td><td>预支金额、偿还周期、每期占用、冷却期、确认按钮。</td></tr>
+              <tr><td>开销记录</td><td>记录心愿兑换、手动开销和后续导入账单。</td><td>金额、分类、来源、支付方式、关联心愿/目标、日期、备注。</td></tr>
+              <tr><td>账单导入</td><td>后续接入外部账单来源。</td><td>来源、导入批次、匹配结果、用户审核、异常记录。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="data" class="doc-section" data-status="active" data-module="data">
+          <div class="section-head">
+            <h2>10. 数据对象</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">data</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>对象</th><th>核心字段</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>FinanceProfile</td><td>monthlyIncome、fixedExpenses、safetyReserveTarget、rewardBudgetRatio</td></tr>
+              <tr><td>BudgetPeriod</td><td>period、income、fixedExpenses、freeBudget、rewardBudget、usedBudget</td></tr>
+              <tr><td>WishFund</td><td>wishItemId、targetAmount、currentAmount、status、expectedReadyDate</td></tr>
+              <tr><td>BudgetCheck</td><td>wishItemId、estimatedCost、availableRewardBudget、result、riskLevel、reasons</td></tr>
+              <tr><td>AdvancePlan</td><td>wishItemId、amount、periods、repayPerPeriod、cooldownUntil、status</td></tr>
+              <tr><td>ExpenseLog</td><td>amount、category、date、paymentMethod、source、sourceRecordId、relatedWishItemId、relatedGoalId、notes</td></tr>
+              <tr><td>ExpenseSource</td><td>type、name、enabled、importMode、lastImportedAt、status</td></tr>
+              <tr><td>BillImportBatch</td><td>source、fileName、importedAt、recordCount、reviewStatus、errors</td></tr>
+              <tr><td>FinanceDecision</td><td>sourceModule、targetType、targetId、amount、result、reasons、createdAt</td></tr>
+              <tr><td>FinanceSettings</td><td>advanceEnabled、advanceLimitRatio、cooldownDays、requireManualConfirm</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="rules" class="doc-section" data-status="active" data-module="rules">
+          <div class="section-head">
+            <h2>11. 风控规则</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag danger">guardrails</span></div>
+          </div>
+          <ul>
+            <li>财务系统不自动发起购买、支付或借贷。</li>
+            <li>用户未设置预算时，不能给出“可放心兑换”的结论。</li>
+            <li>安全储备不足时禁止预支和大额兑换建议。</li>
+            <li>预支必须显示未来预算影响和偿还计划。</li>
+            <li>已有未还预支时，默认不允许新的高价值预支。</li>
+            <li>预算检查只做辅助，不替代专业财务建议。</li>
+            <li>所有金额由用户手动维护，第一版不接入外部金融账户。</li>
+            <li>后续接入外部账单时，只允许只读导入，不保存明文账号、密码、支付密码或银行卡敏感信息。</li>
+            <li>导入记录必须可追溯来源，并允许用户删除导入批次。</li>
+          </ul>
+        </section>
+
+        <section id="acceptance" class="doc-section" data-status="active" data-module="acceptance">
+          <div class="section-head">
+            <h2>12. 验收标准</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">acceptance</span></div>
+          </div>
+          <ol>
+            <li>用户可以手动设置月收入、固定支出、安全储备和奖励预算比例。</li>
+            <li>系统能计算当前可自由支配预算和奖励预算。</li>
+            <li>用户可以手动添加、编辑、删除开销记录，并按分类和来源查看。</li>
+            <li>心愿清单中的心愿可以关联心愿基金。</li>
+            <li>兑换前系统能输出预算检查结果和原因。</li>
+            <li>预算不足时，系统能提供推迟、转心愿基金或申请预支选项。</li>
+            <li>申请预支时，系统能生成偿还计划和冷却期。</li>
+            <li>安全储备不足或已有未还预支时，系统能阻止高风险预支。</li>
+            <li>兑换或预支后能产生消费/预支记录。</li>
+            <li>第一版不依赖任何外部账单接口也能完整使用。</li>
+            <li>系统不触发任何真实支付、借贷或金融账户操作。</li>
+          </ol>
+        </section>
+
+        <section id="open-questions" class="doc-section" data-status="draft" data-module="questions">
+          <div class="section-head">
+            <h2>13. 未决问题</h2>
+            <div class="tags"><span class="tag warn">draft</span><span class="tag">questions</span></div>
+          </div>
+          <ul>
+            <li>预支上限默认比例是多少，是否允许用户自定义。</li>
+            <li>心愿基金是否支持多个心愿并行。</li>
+            <li>奖励预算是否应该独立于娱乐预算，还是作为娱乐预算的一部分。</li>
+            <li>是否需要月度财务复盘页面。</li>
+            <li>外部账单接入优先级：支付宝、微信、银行卡、信用卡、美团、淘宝，哪个先做。</li>
+            <li>外部账单第一步采用 CSV/文件导入、截图识别，还是等待官方接口。</li>
+            <li>未来是否接入真实记账或支付数据，当前默认不接入。</li>
+          </ul>
+        </section>
+
+        <footer>
+          <p>维护规则：涉及预算、预支、心愿基金、兑换检查、消费记录或财务状态时，必须同步更新本文档。</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
