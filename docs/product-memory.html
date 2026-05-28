@@ -1,0 +1,979 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AiLifeOS 产品记忆</title>
+    <meta
+      name="description"
+      content="AiLifeOS 当前阶段的权威产品记忆：运动训练与饮食一体化模块、灵活计划、image2 动作图生成链路、页面设计原则和开发边界。"
+    >
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f8;
+        --panel: #ffffff;
+        --panel-soft: #fafafa;
+        --text: #1f2328;
+        --muted: #606a75;
+        --border: #d8dee4;
+        --accent: #2563eb;
+        --accent-soft: #eff6ff;
+        --success: #15803d;
+        --warning: #b45309;
+        --danger: #b91c1c;
+        --code: #f1f5f9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Microsoft YaHei",
+          sans-serif;
+        line-height: 1.65;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      aside {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: auto;
+        border-right: 1px solid var(--border);
+        background: var(--panel);
+        padding: 24px 18px;
+      }
+
+      main {
+        max-width: 1080px;
+        width: 100%;
+        padding: 40px 48px 80px;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.25;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 34px;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        font-size: 24px;
+        margin-bottom: 14px;
+      }
+
+      h3 {
+        font-size: 18px;
+        margin-top: 26px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        margin: 10px 0;
+      }
+
+      ul,
+      ol {
+        padding-left: 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 14px 0;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--border);
+        padding: 10px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--panel-soft);
+        font-weight: 650;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      code,
+      pre {
+        font-family:
+          "SFMono-Regular",
+          Consolas,
+          "Liberation Mono",
+          monospace;
+      }
+
+      code {
+        background: var(--code);
+        border-radius: 4px;
+        padding: 2px 5px;
+      }
+
+      pre {
+        margin: 14px 0;
+        padding: 14px 16px;
+        overflow: auto;
+        background: var(--code);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        line-height: 1.55;
+      }
+
+      .eyebrow {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 650;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .summary {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 16px;
+        max-width: 820px;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .meta-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 12px;
+      }
+
+      .meta-item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+
+      .meta-item span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .nav-title {
+        margin-bottom: 14px;
+        font-size: 18px;
+        font-weight: 750;
+      }
+
+      .nav-note {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 18px;
+      }
+
+      nav a {
+        display: block;
+        border-radius: 6px;
+        padding: 6px 8px;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      nav a:hover {
+        background: var(--accent-soft);
+        text-decoration: none;
+      }
+
+      .doc-section {
+        margin-top: 28px;
+        padding: 24px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .section-head {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: flex-end;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 2px 8px;
+        background: var(--panel-soft);
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .tag.active {
+        border-color: #bfdbfe;
+        background: var(--accent-soft);
+        color: #1d4ed8;
+      }
+
+      .tag.safe {
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+        color: var(--success);
+      }
+
+      .tag.warn {
+        border-color: #fed7aa;
+        background: #fff7ed;
+        color: var(--warning);
+      }
+
+      .tag.danger {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: var(--danger);
+      }
+
+      .callout {
+        margin: 14px 0;
+        padding: 12px 14px;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        background: var(--accent-soft);
+      }
+
+      .callout strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .mini-card {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+        background: var(--panel-soft);
+      }
+
+      .mini-card strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      footer {
+        color: var(--muted);
+        margin-top: 28px;
+        font-size: 13px;
+      }
+
+      @media (max-width: 920px) {
+        .layout {
+          display: block;
+        }
+
+        aside {
+          position: static;
+          height: auto;
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        main {
+          padding: 28px 18px 56px;
+        }
+
+        .meta-grid,
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          display: block;
+        }
+
+        .tags {
+          justify-content: flex-start;
+          margin-top: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside aria-label="文档目录">
+        <div class="nav-title">AiLifeOS 产品记忆</div>
+        <div class="nav-note">权威记忆文件。后续开发、设计和重构前先读。</div>
+        <nav>
+          <a href="#positioning">1. 产品定位</a>
+          <a href="#loop">2. 总体闭环</a>
+          <a href="#module-boundary">3. 当前模块边界</a>
+          <a href="#user-profile">4. 用户画像</a>
+          <a href="#six-month-goal">5. 半年训练目标</a>
+          <a href="#flexible-planning">6. 灵活计划机制</a>
+          <a href="#schedule-changes">7. 固定事件和临时变化</a>
+          <a href="#skip-downgrade">8. 跳过和降级机制</a>
+          <a href="#racket-sports">9. 球类运动联动</a>
+          <a href="#training-nutrition">10. 训练和饮食一体化</a>
+          <a href="#nutrition-principles">11. 饮食建议原则</a>
+          <a href="#exercise-teaching">12. 动作教学需求</a>
+          <a href="#image2-flow">13. image2 生成链路</a>
+          <a href="#image2-security">14. image2 安全规则</a>
+          <a href="#prompt-rules">15. Prompt 生成原则</a>
+          <a href="#ui-direction">16. 页面设计方向</a>
+          <a href="#pages">17. 关键页面</a>
+          <a href="#safety-rules">18. 安全规则</a>
+          <a href="#out-of-scope">19. 暂不实现范围</a>
+          <a href="#technical-direction">20. 技术方向初稿</a>
+          <a href="#priority">21. 开发优先级</a>
+          <a href="#decision-filter">22. 功能判断标准</a>
+          <a href="#one-line-summary">23. 当前一句话总结</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header>
+          <div class="eyebrow">Canonical Product Memory</div>
+          <h1>AiLifeOS 产品记忆</h1>
+          <p class="summary">
+            本文档记录 AiLifeOS 当前阶段的产品共识。后续 AI 或开发者在继续设计、开发、重构前，必须先阅读本文档，避免忘记已有决策或把项目方向做偏。
+          </p>
+
+          <div class="meta-grid" aria-label="文档元信息">
+            <div class="meta-item">
+              <strong>文档状态</strong>
+              <span>权威记忆</span>
+            </div>
+            <div class="meta-item">
+              <strong>当前模块</strong>
+              <span>运动训练与饮食一体化</span>
+            </div>
+            <div class="meta-item">
+              <strong>开发阶段</strong>
+              <span>MVP 前需求固化</span>
+            </div>
+            <div class="meta-item">
+              <strong>更新原则</strong>
+              <span>方向变更时同步更新</span>
+            </div>
+          </div>
+        </header>
+
+        <section id="positioning" class="doc-section" data-module="core" data-status="active">
+          <div class="section-head">
+            <h2>1. 产品定位</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">core</span></div>
+          </div>
+          <p>AiLifeOS 不是单一健身 App，而是一个面向个人长期目标的生活操作系统。</p>
+          <pre><code>围绕个人目标，持续完成规划、执行、记录、复盘、调整和记忆沉淀的本地优先生活操作系统。</code></pre>
+          <p>当前阶段只落地第一个真实模块：运动训练与饮食一体化模块。</p>
+          <p>该模块服务的目标是：用户刚开通半年健身卡，是健身小白，平时打羽毛球和网球，希望通过训练计划、动作教学、饮食安排和复盘，让羽毛球、网球和整体运动能力持续提升。</p>
+        </section>
+
+        <section id="loop" class="doc-section" data-module="core" data-status="active">
+          <div class="section-head">
+            <h2>2. 总体闭环</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">system loop</span></div>
+          </div>
+          <p>AiLifeOS 的所有模块最终都应该遵循同一个闭环：</p>
+          <pre><code>目标
+  -> 计划
+  -> 今日行动
+  -> 执行记录
+  -> AI 复盘
+  -> 自动调整
+  -> 个人记忆沉淀</code></pre>
+          <p>运动训练模块当前的闭环是：</p>
+          <pre><code>个人档案和半年目标
+  -> 生成阶段计划和本周任务池
+  -> 根据日程、身体状态、球类活动生成今日训练和饮食计划
+  -> 用户查看动作图文教学
+  -> 没有动作图时按需调用 image2 生成并保存为静态资源
+  -> 用户完成训练和饮食记录
+  -> 系统根据疲劳、疼痛、完成情况和球类表现调整后续计划</code></pre>
+        </section>
+
+        <section id="module-boundary" class="doc-section" data-module="training" data-status="active">
+          <div class="section-head">
+            <h2>3. 当前模块边界</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">boundary</span></div>
+          </div>
+          <p>当前模块名称：<strong>运动训练与饮食一体化模块</strong>。</p>
+          <p>它不是完整 AiLifeOS 的全部，只是第一个模块。后续可能加入学习、工作、财务、知识库、习惯、项目管理等模块，但当前不要提前实现。</p>
+          <table>
+            <thead>
+              <tr><th>核心对象</th><th>当前模块中的作用</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Profile 个人档案</td><td>记录身体信息、运动背景、伤病、偏好</td></tr>
+              <tr><td>Goal 目标</td><td>半年运动提升目标</td></tr>
+              <tr><td>Plan 计划</td><td>阶段计划、本周任务池、今日建议</td></tr>
+              <tr><td>Schedule 日程</td><td>固定球局、临时网球课、可训练时间</td></tr>
+              <tr><td>Task 任务</td><td>今日训练、饮食执行、恢复任务</td></tr>
+              <tr><td>Log 记录</td><td>训练、饮食、疼痛、疲劳、球类活动</td></tr>
+              <tr><td>Asset 资源</td><td>image2 生成的动作图、prompt、版本信息</td></tr>
+              <tr><td>Review 复盘</td><td>每日、每周、阶段复盘</td></tr>
+              <tr><td>Rule 规则</td><td>疲劳、疼痛、球类冲突、计划重排规则</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="user-profile" class="doc-section" data-module="profile" data-status="active">
+          <div class="section-head">
+            <h2>4. 用户画像</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">personal use</span></div>
+          </div>
+          <p>当前优先服务的用户就是项目所有者本人：</p>
+          <ul>
+            <li>健身小白，不熟悉训练动作和健身房器械。</li>
+            <li>刚开通半年健身卡，有明确的 24 周时间边界。</li>
+            <li>平时打羽毛球和网球。</li>
+            <li>希望提升移动、爆发、核心、肩肘稳定、下肢力量和整体运动表现。</li>
+            <li>需要系统告诉自己今天练什么、怎么练、为什么这么练、怎么吃、练完如何调整。</li>
+            <li>不需要社区、排行榜、复杂商业化功能。</li>
+          </ul>
+        </section>
+
+        <section id="six-month-goal" class="doc-section" data-module="goals" data-status="active">
+          <div class="section-head">
+            <h2>5. 半年训练目标</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">24 weeks</span></div>
+          </div>
+          <p>半年目标不是单纯增肌或减脂，而是：</p>
+          <pre><code>通过安全、可持续的健身房训练和饮食安排，提升羽毛球和网球表现，同时建立长期训练习惯。</code></pre>
+          <table>
+            <thead>
+              <tr><th>阶段</th><th>周期</th><th>目标</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>适应期</td><td>第 1-4 周</td><td>学动作、熟悉器械、建立习惯、避免受伤</td></tr>
+              <tr><td>基础期</td><td>第 5-12 周</td><td>提升基础力量、核心稳定和关节控制</td></tr>
+              <tr><td>专项期</td><td>第 13-20 周</td><td>将力量、移动、旋转能力转化到羽毛球和网球</td></tr>
+              <tr><td>巩固期</td><td>第 21-24 周</td><td>巩固表现、降低伤病风险、总结长期策略</td></tr>
+            </tbody>
+          </table>
+          <div class="callout">
+            <strong>MVP 决策</strong>
+            第一版优先认真做好前 4 周。后续阶段可以先保留方向，不需要一次性写死所有训练细节。
+          </div>
+        </section>
+
+        <section id="flexible-planning" class="doc-section" data-module="planning" data-status="active">
+          <div class="section-head">
+            <h2>6. 灵活计划机制</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">planning</span></div>
+          </div>
+          <p>计划不应是固定课表，而应是可重排的建议系统。</p>
+          <pre><code>长期目标稳定，周计划是任务池，每日计划动态生成。</code></pre>
+          <p>不推荐固定写死：</p>
+          <pre><code>周一练腿，周三练胸，周五练背。</code></pre>
+          <p>推荐生成本周任务池：</p>
+          <pre><code>本周需要完成：
+- 下肢基础 1 次
+- 上肢稳定 1 次
+- 核心抗旋转 1 次
+- 灵活性恢复 2 次</code></pre>
+          <p>每天根据以下因素选择最合适任务：</p>
+          <ul>
+            <li>今天是否有羽毛球、网球或网球课。</li>
+            <li>昨天练了什么。</li>
+            <li>睡眠和疲劳情况。</li>
+            <li>是否有肌肉酸痛或关节疼痛。</li>
+            <li>今天可训练时间。</li>
+            <li>本周还剩哪些任务。</li>
+            <li>距离本周结束还有几天。</li>
+          </ul>
+        </section>
+
+        <section id="schedule-changes" class="doc-section" data-module="schedule" data-status="active">
+          <div class="section-head">
+            <h2>7. 固定事件和临时变化</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">schedule first</span></div>
+          </div>
+          <p>用户可能有固定球局，也可能临时约网球课，或者当天突然不想练。这些变化必须是一等公民，而不是异常情况。</p>
+          <div class="grid-2">
+            <div class="mini-card">
+              <strong>固定事件示例</strong>
+              <p>每周三下班后和朋友打球。</p>
+            </div>
+            <div class="mini-card">
+              <strong>临时事件示例</strong>
+              <p>今天晚上约了网球课。</p>
+            </div>
+          </div>
+          <p>系统应该先处理固定日程和临时日程，再安排训练：</p>
+          <pre><code>固定日程
+  -> 临时日程
+  -> 今日身体状态
+  -> 本周任务池
+  -> 今日训练和饮食建议</code></pre>
+          <p>今日页需要支持这些操作：</p>
+          <ul>
+            <li>开始训练。</li>
+            <li>换一个训练。</li>
+            <li>改到明天。</li>
+            <li>今天不练。</li>
+            <li>我只有 20 分钟。</li>
+            <li>我晚上要打球。</li>
+            <li>身体不舒服。</li>
+          </ul>
+          <p>每个操作都应该触发重新规划，而不是简单删除计划。</p>
+        </section>
+
+        <section id="skip-downgrade" class="doc-section" data-module="planning" data-status="active">
+          <div class="section-head">
+            <h2>8. 跳过和降级机制</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">flexible</span></div>
+          </div>
+          <p>当用户点击“今天不练”时，系统应该轻量询问原因：太累、没时间、身体不舒服、临时有事、单纯不想练。</p>
+          <table>
+            <thead>
+              <tr><th>原因</th><th>系统反应</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>太累</td><td>安排恢复，降低本周负荷</td></tr>
+              <tr><td>没时间</td><td>推荐 10-15 分钟最低可行版本</td></tr>
+              <tr><td>身体不舒服</td><td>记录疼痛或不适，避开相关动作</td></tr>
+              <tr><td>临时有事</td><td>将任务放回任务池并重新排期</td></tr>
+              <tr><td>单纯不想练</td><td>允许跳过，记录趋势，不惩罚用户</td></tr>
+            </tbody>
+          </table>
+          <table>
+            <thead>
+              <tr><th>版本</th><th>时长</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>完整版</td><td>45-60 分钟</td><td>状态好、时间充足</td></tr>
+              <tr><td>标准版</td><td>30-40 分钟</td><td>日常默认</td></tr>
+              <tr><td>最低可行版</td><td>10-15 分钟</td><td>忙、累、不想练但希望保持连续性</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="racket-sports" class="doc-section" data-module="training" data-status="active">
+          <div class="section-head">
+            <h2>9. 球类运动联动</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag safe">safety</span></div>
+          </div>
+          <p>羽毛球和网球本身也是训练负荷，不能当成普通备注。</p>
+          <ul>
+            <li>当天有高强度羽毛球，不安排重腿。</li>
+            <li>当天有网球课，不安排肩部高负荷训练。</li>
+            <li>球类后第二天疲劳高，降低健身房强度。</li>
+            <li>连续两天球类，第三天优先恢复。</li>
+            <li>肩部疼痛时减少推举、扣杀相关强化和高负荷上肢训练。</li>
+            <li>膝盖疼痛时减少跳跃、重深蹲、剧烈变向训练。</li>
+          </ul>
+          <p>AI 可以解释原因，但这些安全规则应由明确规则控制，不完全交给自由生成。</p>
+        </section>
+
+        <section id="training-nutrition" class="doc-section" data-module="nutrition" data-status="active">
+          <div class="section-head">
+            <h2>10. 训练和饮食一体化</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">daily plan</span></div>
+          </div>
+          <p>每日计划必须同时包含训练和饮食安排。不是先生成训练，再给泛泛饮食建议，而是：</p>
+          <pre><code>今日训练类型、强度和时间
+  -> 决定今日饮食重点
+  -> 生成早餐、午餐、训练前、训练后、晚餐和饮水建议</code></pre>
+          <p>今日计划结构：</p>
+          <pre><code>今日计划
+  |- 训练安排
+  |   |- 训练类型
+  |   |- 动作、组数、次数、休息
+  |   |- 新手重量建议
+  |   `- 风险提示
+  `- 饮食安排
+      |- 早餐
+      |- 午餐
+      |- 训练前补给
+      |- 训练后补给
+      |- 晚餐
+      |- 饮水建议
+      `- 避免事项</code></pre>
+          <ul>
+            <li>如果今天不练，取消训练前后补给，改成普通日饮食。</li>
+            <li>如果临时增加网球课，增加训练前碳水和补水提醒。</li>
+            <li>如果今天是下肢训练，保证碳水和蛋白质。</li>
+            <li>如果今天是恢复日，保持蛋白质，碳水适中，避免暴食。</li>
+          </ul>
+          <p>第一版不做精确卡路里和食物数据库，优先使用小白友好的结构化餐次建议。</p>
+        </section>
+
+        <section id="nutrition-principles" class="doc-section" data-module="nutrition" data-status="active">
+          <div class="section-head">
+            <h2>11. 饮食建议原则</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">beginner</span></div>
+          </div>
+          <p>当前饮食目标是支持运动表现和训练恢复，不是极端减脂。</p>
+          <pre><code>运动表现优先，同时轻微改善体态。</code></pre>
+          <p>记录方式可以使用手掌法，不要求称重：</p>
+          <ul>
+            <li>蛋白质：一掌心。</li>
+            <li>碳水：一拳头。</li>
+            <li>蔬菜：一到两拳头。</li>
+            <li>脂肪：一拇指。</li>
+            <li>饮水：按杯数或大致容量记录。</li>
+          </ul>
+          <p>第一版饮食模块不做精确热量计算、大型食物数据库、条形码扫描、菜谱商城、复杂营养素报表、AI 拍照识别热量和严格减脂计划。</p>
+        </section>
+
+        <section id="exercise-teaching" class="doc-section" data-module="exercise" data-status="active">
+          <div class="section-head">
+            <h2>12. 动作教学需求</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">image rich</span></div>
+          </div>
+          <p>由于用户是健身小白，动作图文教学是核心体验，不是附属说明。</p>
+          <div class="grid-2">
+            <div class="mini-card">
+              <strong>动作详情页应包含</strong>
+              <ul>
+                <li>标准动作图、起始姿势图、发力过程图、结束姿势图、常见错误图。</li>
+                <li>训练目的、器械说明、文字步骤、新手重量选择。</li>
+                <li>对羽毛球和网球的帮助、常见错误、停止信号、替代动作。</li>
+              </ul>
+            </div>
+            <div class="mini-card">
+              <strong>说明必须回答</strong>
+              <ul>
+                <li>怎么站或怎么坐，手脚放哪里。</li>
+                <li>身体哪里发力，做到什么程度。</li>
+                <li>什么感觉是正常，什么疼痛必须停止。</li>
+                <li>做不了时换哪个动作。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="image2-flow" class="doc-section" data-module="assets" data-status="active">
+          <div class="section-head">
+            <h2>13. image2 动作图生成链路</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">on demand</span></div>
+          </div>
+          <p>当前不预先生成全部动作图。采用按需生成和静态资产缓存：</p>
+          <pre><code>用户点击动作
+  -> 检查本地是否已有该动作图片
+  -> 有：直接展示静态图片
+  -> 没有：根据结构化动作数据生成 image2 prompt
+  -> 本地服务或 Node 脚本调用中转站 image2
+  -> 保存图片到 public/exercise-images/
+  -> 更新图片 manifest
+  -> 页面展示图片
+  -> 后续同动作直接复用</code></pre>
+          <p>图片不要存数据库。现阶段个人使用，生成图片作为项目静态资源保存，并可提交到 GitHub 仓库。</p>
+          <pre><code>public/
+  exercise-images/
+    lat-pulldown/
+      cover.webp
+      start.webp
+      motion.webp
+      end.webp
+      mistake-shrug.webp</code></pre>
+          <table>
+            <thead>
+              <tr><th>状态</th><th>含义</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>missing</td><td>没有图片</td></tr>
+              <tr><td>generating</td><td>生成中</td></tr>
+              <tr><td>ready</td><td>可使用</td></tr>
+              <tr><td>rejected</td><td>人工判断不准确</td></tr>
+              <tr><td>regenerate</td><td>需要重新生成</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="image2-security" class="doc-section" data-module="ai" data-status="active">
+          <div class="section-head">
+            <h2>14. image2 安全和密钥规则</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag danger">secret safe</span></div>
+          </div>
+          <p>用户没有官方 image2，只持有中转站 key。中转站可能兼容 OpenAI 风格接口，也可能有差异，开发前需要先用最小脚本验证。</p>
+          <ul>
+            <li>API key 不能写入前端代码。</li>
+            <li>API key 不能提交到 GitHub。</li>
+            <li>API key 放在 <code>.env.local</code> 或本地私有配置中。</li>
+            <li>前端不能直接调用 image2。</li>
+            <li>调用 image2 应通过本地 Node 脚本或本地后端服务完成。</li>
+            <li>生成图片后保存到项目静态目录，App 运行时只读静态图片。</li>
+          </ul>
+          <p>需要验证的中转站信息：base URL、模型名是否为 <code>image2</code>、图片生成接口路径、返回格式是 <code>base64</code> 还是 <code>url</code>、支持的尺寸和参数。</p>
+        </section>
+
+        <section id="prompt-rules" class="doc-section" data-module="ai" data-status="active">
+          <div class="section-head">
+            <h2>15. Prompt 生成原则</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">prompt</span></div>
+          </div>
+          <p>image2 只负责画图，不负责决定动作是否正确。动作定义必须来自结构化动作库。</p>
+          <pre><code>动作名
+适合等级
+器械
+目标肌群
+动作步骤
+常见错误
+停止信号
+替代动作
+羽毛球收益
+网球收益</code></pre>
+          <p>Prompt 风格要求：</p>
+          <ul>
+            <li>干净白色背景。</li>
+            <li>真实人体比例。</li>
+            <li>运动康复教学风格。</li>
+            <li>不要夸张肌肉。</li>
+            <li>不要漫画风。</li>
+            <li>不要复杂背景。</li>
+            <li>不要错误器械。</li>
+            <li>清晰表达起始姿势、过程或错误示范。</li>
+          </ul>
+        </section>
+
+        <section id="ui-direction" class="doc-section" data-module="ui" data-status="active">
+          <div class="section-head">
+            <h2>16. 页面设计方向</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">ui</span></div>
+          </div>
+          <p>AiLifeOS 的界面要像个人生活操作系统，不像普通后台，也不像花哨健身 App。</p>
+          <pre><code>安静、克制、清爽、专业、有信息密度、有秩序感。</code></pre>
+          <pre><code>左侧导航栏
+  |- 今日
+  |- 目标
+  |- 日程
+  |- 任务
+  |- 记录
+  |- 统计
+  |- 资源
+  `- 设置
+
+顶部状态栏
+  |- 今天日期
+  |- 当前目标阶段
+  |- 今日状态
+  `- 快捷操作
+
+主内容区
+  `- 当前页面内容</code></pre>
+          <ul>
+            <li>不做营销落地页。</li>
+            <li>不用大面积渐变和装饰性背景。</li>
+            <li>不用巨型卡片堆砌。</li>
+            <li>卡片圆角控制在 8px 以内。</li>
+            <li>少阴影，多使用细边框、分区、留白和清晰层级。</li>
+            <li>字体紧凑清晰，标题不要过大。</li>
+            <li>图标优先使用统一线性图标风格。</li>
+            <li>页面要适合长期高频使用。</li>
+          </ul>
+        </section>
+
+        <section id="pages" class="doc-section" data-module="ui" data-status="active">
+          <div class="section-head">
+            <h2>17. 关键页面</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">pages</span></div>
+          </div>
+          <table>
+            <thead>
+              <tr><th>页面</th><th>作用</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>今日页</td><td>打开后直接看到今日训练、饮食、状态、风险和快捷操作</td></tr>
+              <tr><td>训练页</td><td>展示本周训练任务池、今日训练和可替换训练</td></tr>
+              <tr><td>动作详情页</td><td>展示图文教学、错误提示、停止信号和替代动作</td></tr>
+              <tr><td>饮食页</td><td>展示与今日训练联动的餐次安排和饮食记录</td></tr>
+              <tr><td>日程页</td><td>展示固定球局、临时课程、训练安排和冲突提醒</td></tr>
+              <tr><td>记录页</td><td>查看训练、饮食、疲劳、疼痛、球类活动时间线</td></tr>
+              <tr><td>统计页</td><td>展示完成率、训练负荷、疲劳趋势、疼痛次数、球类频率</td></tr>
+              <tr><td>资源页</td><td>管理 image2 生成图片、prompt、状态和重生成</td></tr>
+              <tr><td>个人档案页</td><td>配置身体信息、运动背景、伤病、目标和偏好</td></tr>
+            </tbody>
+          </table>
+          <p>今日页是最重要入口。今日页需要回答：今天该不该练、今天练什么、今天怎么吃、为什么这么安排、有没有风险、如果计划变了怎么调整。</p>
+        </section>
+
+        <section id="safety-rules" class="doc-section" data-module="rules" data-status="active">
+          <div class="section-head">
+            <h2>18. 安全规则</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag safe">safety</span></div>
+          </div>
+          <p>运动训练涉及身体风险，安全层必须明确。</p>
+          <ul>
+            <li>关节刺痛、麻木、尖锐疼痛时停止动作。</li>
+            <li>连续高疲劳时降低训练量或安排恢复。</li>
+            <li>当天有高强度球类活动时，不安排重腿。</li>
+            <li>肩痛时避免高负荷推举、过量扣杀相关强化和大重量上肢训练。</li>
+            <li>膝痛时避免跳跃、重深蹲和剧烈变向。</li>
+            <li>动作变形时不要加重量。</li>
+            <li>新手重量以“最后 2 次吃力但动作不变形”为准。</li>
+          </ul>
+          <p>AI 可以提供解释和建议，但不能绕过安全规则。</p>
+        </section>
+
+        <section id="out-of-scope" class="doc-section" data-module="scope" data-status="active">
+          <div class="section-head">
+            <h2>19. 暂不实现范围</h2>
+            <div class="tags"><span class="tag warn">defer</span><span class="tag">YAGNI</span></div>
+          </div>
+          <p>当前阶段明确不做：</p>
+          <ul>
+            <li>用户系统。</li>
+            <li>云数据库。</li>
+            <li>社区。</li>
+            <li>排行榜。</li>
+            <li>支付。</li>
+            <li>多人训练计划。</li>
+            <li>复杂饮食系统。</li>
+            <li>可穿戴设备接入。</li>
+            <li>自动提交 GitHub。</li>
+            <li>前端直接调用 image2。</li>
+            <li>大型 AI Agent 平台。</li>
+            <li>全部 LifeOS 模块。</li>
+          </ul>
+          <p>这些不是永远不做，而是当前阶段不做。</p>
+        </section>
+
+        <section id="technical-direction" class="doc-section" data-module="engineering" data-status="draft">
+          <div class="section-head">
+            <h2>20. 技术方向初稿</h2>
+            <div class="tags"><span class="tag warn">draft</span><span class="tag">architecture</span></div>
+          </div>
+          <p>后续开发可以按以下思路组织，但不要求一次性全部实现：</p>
+          <pre><code>src/
+  core/
+    profile/
+    goals/
+    schedule/
+    tasks/
+    logs/
+    assets/
+    reviews/
+    rules/
+
+  modules/
+    training/
+      exercises/
+      plans/
+      sessions/
+      nutrition/
+      reviews/
+      components/
+
+  data/
+    seed/</code></pre>
+          <p>静态资源建议：</p>
+          <pre><code>public/
+  exercise-images/</code></pre>
+          <p>本地脚本建议：</p>
+          <pre><code>scripts/
+  test-image2.ts
+  generate-exercise-image.ts</code></pre>
+          <p>环境变量建议：</p>
+          <pre><code>IMAGE_API_BASE_URL=
+IMAGE_API_KEY=
+IMAGE_MODEL=image2</code></pre>
+          <p><code>.env.local</code> 必须加入 <code>.gitignore</code>。</p>
+        </section>
+
+        <section id="priority" class="doc-section" data-module="delivery" data-status="active">
+          <div class="section-head">
+            <h2>21. 开发优先级</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">MVP</span></div>
+          </div>
+          <ol>
+            <li>产品框架和今日页。</li>
+            <li>个人档案和半年目标。</li>
+            <li>灵活本周任务池。</li>
+            <li>今日训练和饮食一体化计划。</li>
+            <li>动作详情页和结构化动作库。</li>
+            <li>image2 prompt 生成和本地保存链路。</li>
+            <li>训练、饮食、疲劳、疼痛记录。</li>
+            <li>每周复盘和下周调整建议。</li>
+            <li>资源页管理生成图片和重生成状态。</li>
+          </ol>
+        </section>
+
+        <section id="decision-filter" class="doc-section" data-module="delivery" data-status="active">
+          <div class="section-head">
+            <h2>22. 判断一个功能是否应该做</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">KISS</span><span class="tag">YAGNI</span></div>
+          </div>
+          <p>新增功能前先问：</p>
+          <ul>
+            <li>它是否服务当前半年运动目标。</li>
+            <li>它是否能进入目标、计划、执行、记录、复盘、调整闭环。</li>
+            <li>它是否对健身小白有直接帮助。</li>
+            <li>它是否能提升训练和饮食执行率。</li>
+            <li>它是否会明显增加当前复杂度。</li>
+          </ul>
+          <p>如果不能直接服务当前闭环，默认不做。</p>
+        </section>
+
+        <section id="one-line-summary" class="doc-section" data-module="summary" data-status="active">
+          <div class="section-head">
+            <h2>23. 当前一句话总结</h2>
+            <div class="tags"><span class="tag active">active</span><span class="tag">summary</span></div>
+          </div>
+          <pre><code>AiLifeOS 当前先做运动训练与饮食一体化模块：它根据用户的半年运动目标、固定球局、临时安排、身体状态和训练记录，动态生成今日训练与饮食计划；用户点击动作时按需调用 image2 生成图文教学并保存为 GitHub 静态资源；训练和饮食执行后进入记录与复盘，持续调整后续计划。</code></pre>
+        </section>
+
+        <footer>
+          <p>维护规则：修改产品方向、模块边界、训练饮食流程、image2 链路、页面设计或 MVP 范围时，必须同步更新本文档。</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
